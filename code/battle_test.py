@@ -101,7 +101,6 @@ def get_marker(cap):
                         send_message(send_id.encode())
                         cv2.destroyWindow('marker')
                         card = card_data.iloc[marker_id]
-                        print(card['name'])
                         did_get_id = True
                         break
                     else:
@@ -123,10 +122,8 @@ def battle(cap):
         
         #ユーザのターン
         if cnt % 2 == 0:
-            type = ''
-            value = 0
 
-            while type != 'atk':        #攻撃カードでない間
+            while True:
                 card = get_marker(cap)  #マーカー読込
                 
                 #中断処理
@@ -134,25 +131,24 @@ def battle(cap):
                     end_game = True
                     print("ゲームを中断しました")
                     break
+                
+                print_card(card)
 
-                type = card['type']
-                value = card['value']
-
-                if type == 'buff':              #バフカード
-                    user_status.ap += value
-                elif type == 'def':             #防御カード
-                    mei_status.ap -= value
-                elif type == 'heal':            #回復カード
-                    user_status.hp += value
+                if card['type'] == 'atk':                   #攻撃カード
+                    user_status.ap += card['value']
+                    mei_status.hp -= user_status.ap
+                    print("ユーザが " + str(user_status.ap) + " のアタック！")
+                    user_status.ap = 0
+                    break
+                elif card['type'] == 'buff':                #バフカード
+                    user_status.ap += card['value']
+                elif card['type'] == 'def':                 #防御カード
+                    mei_status.ap -= card['value']
+                elif card['type'] == 'heal':                #回復カード
+                    user_status.hp += card['value']
                     print_status()
-                    print("HPを" + str(value) + " 回復！")
-            
-            if not end_game:
-                user_status.ap += value
-                mei_status.hp -= user_status.ap
-                print("ユーザが " + str(user_status.ap) + " のアタック！")
+                    print("HPを" + str(card['value']) + " 回復！")
 
-            user_status.ap = 0
         #メイちゃんのターン
         else:
             mei_status.ap += 20
@@ -165,7 +161,7 @@ def battle(cap):
 
         print_status()
     
-#ステータスを表示する
+#ステータスを表示
 def print_status():
     status_img = base_img.copy()
     user_HP = user_status.hp
@@ -174,6 +170,14 @@ def print_status():
     cv2.putText(status_img, text='user:'+'{:>3}'.format(user_HP), org=(0,100), fontFace=cv2.FONT_HERSHEY_SIMPLEX, fontScale=3.0, color=(0,0,0), thickness=3)
     cv2.putText(status_img, text='mei:'+'{:>3}'.format(mei_HP), org=(0,200), fontFace=cv2.FONT_HERSHEY_SIMPLEX, fontScale=3.0, color=(0,0,0), thickness=3)
     cv2.imshow('status', status_img)
+
+#カードを表示
+def print_card(card):
+    card_img = base_img.copy()
+    cv2.putText(card_img, text='name:'+card['name'], org=(0,100), fontFace=cv2.FONT_HERSHEY_SIMPLEX, fontScale=2.0, color=(0,0,0), thickness=2)
+    cv2.putText(card_img, text='type:'+card['type'], org=(0,150), fontFace=cv2.FONT_HERSHEY_SIMPLEX, fontScale=2.0, color=(0,0,0), thickness=2)
+    cv2.putText(card_img, text='value:'+str(card['value']), org=(0,200), fontFace=cv2.FONT_HERSHEY_SIMPLEX, fontScale=2.0, color=(0,0,0), thickness=2)
+    cv2.imshow('card', card_img)
 
 if __name__ == '__main__':
     #カメラを取得
