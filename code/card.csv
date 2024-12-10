@@ -1,0 +1,5 @@
+id,name,type,value
+0,sword,atk,10
+1,fire,buff,10
+2,shield,def,10
+3,potion,heal,10
