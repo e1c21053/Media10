@@ -24,6 +24,12 @@ class Status:
 mei_status = Status(100, 0)
 user_status = Status(100, 0)
 
+def get_random_dmg(dmg_list: list[tuple[int, float]]) -> int:
+    """
+    list[tuple[int,float] int はダメージ量, float は確率を引数に取り，確率に応じてダメージ量を返す関数
+    例: get_random_dmg([(10, 0.5), (20, 0.3), (30, 0.2)]) は, 10の確率0.5, 20の確率0.3, 30の確率0.2でダメージ量を返す
+    """
+    return np.random.choice([dmg[0] for dmg in dmg_list], p=[dmg[1] for dmg in dmg_list])
 
 ###この部分はMMDAgentとの通信部分です．触らないでください###
 def recv_message():
