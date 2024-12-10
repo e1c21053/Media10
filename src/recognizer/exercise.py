@@ -124,7 +124,6 @@ class ExerciseRecognizer:
                 print(f"Crunch count: {self.crunch_count}")
                 self.crunch_stage = "up"
 
-
     def debug_display_pos(self, pos_list: list[(tuple, str)], frame: cv2.VideoCapture):
         for i, (pos, name) in enumerate(pos_list):
             pixel = self.convert_to_pixel(pos, frame)
@@ -157,19 +156,6 @@ class ExerciseRecognizer:
 
     def calculate_distance(self, a, b):
         return ((a[0] - b[0]) ** 2 + (a[1] - b[1]) ** 2) ** 0.5
-
-    def calculate_angle(self, a, b, c):
-        import numpy as np
-        a = np.array([a.x, a.y])
-        b = np.array([b.x, b.y])
-        c = np.array([c.x, c.y])
-
-        radians = np.arctan2(c[1]-b[1], c[0]-b[0]) - \
-            np.arctan2(a[1]-b[1], a[0]-b[0])
-        angle = np.abs(radians * 180.0 / np.pi)
-        if angle > 180.0:
-            angle = 360 - angle
-        return angle
 
     # 全身が映っているかどうかを判定する
     def is_whole_body_visible(self, landmarks):
