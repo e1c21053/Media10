@@ -1,5 +1,9 @@
-id,name,type,value
-0,sword,atk,10
-1,fire,buff,10
-2,shield,def,10
-3,potion,heal,10
+name,type,value,bonusValue
+sword,atk,10,0
+a,atk,10,0
+b,atk,20,0
+c,atk,50,0
+fire,buff,10,20
+shield,def,20,30
+potion,heal,30,40
+draw1,draw,3,5
