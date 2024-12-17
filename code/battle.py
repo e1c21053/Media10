@@ -14,6 +14,12 @@ from recognizer import hand
 WIDTH = 640
 HEIGHT = 480
 
+EASY = '簡単'
+NORMAL = '普通'
+HARD = '難しい'
+LEVEL = '難易度'
+START ='ゲーム開始'
+
 #カードデータ(csvファイル)を読み込む
 card_data = pd.read_csv('card.csv')
 card_data['used'] = 0
@@ -155,7 +161,7 @@ def battle(cap):
                     break
                 #パス
                 elif marker_id < 0:
-                    print('パスしました')
+                    print("パスしました")
                     break
                 
                 card_data.loc[marker_id, 'used'] = 1    #カードを使用済みに
@@ -182,7 +188,7 @@ def battle(cap):
                         print(mode)
 
                     #お題にチャレンジするか
-                    will_challenge = get_bool('それでは頑張ってください', '追加効果なし')
+                    will_challenge = get_bool('', '')
 
                     if card['type'] == 'buff':  #バフカード
                         if will_challenge:
@@ -225,7 +231,7 @@ def battle(cap):
                                 num = card['value']
                         else:
                             num = card['value']
-                            print("カードを " + str(num) + " 枚引いてください")
+                        print("カードを " + str(num) + " 枚引いてください")
 
         #メイちゃんのターン
         else:
@@ -240,14 +246,14 @@ def battle(cap):
         cnt += 1
         print_status()
 
-#バフカードのお題チャレンジ
+#バフカードのお題
 def buff_color(cap):
     color_recognizer = color.ColorRecognizer()
     is_cleared = False
     color_list = ['red', 'green', 'blue']
 
     correct_color = np.random.choice(color_list)   #正解の色
-    print(correct_color + 'を探して')
+    print(correct_color + 'を探してください')
 
     while cap.isOpened():
         ret, frame = cap.read()
@@ -329,7 +335,7 @@ def get_bool(true_msg, false_msg):
         if key==ord('y'):
             return True
 
-#難易度(メイちゃんの攻撃力)設定
+#難易度設定
 def set_level():
     print("難易度選択")
 
@@ -339,11 +345,11 @@ def set_level():
         if len(mmd_str) > 0:
             print(mmd_str)
 
-        if '簡単' in mmd_str:
+        if EASY in mmd_str:
             return 100, [(10, 0.3), (20, 0.5), (30, 0.2)]
-        if '普通' in mmd_str:
+        if NORMAL in mmd_str:
             return 150, [(10, 0.15), (20, 0.4), (30, 0.35), (50, 0.1)]
-        if '難しい' in mmd_str:
+        if HARD in mmd_str:
             return 200, [(10, 0.1), (30, 0.4), (50, 0.4), (70, 0.1)]
         
 
@@ -368,10 +374,10 @@ if __name__ == '__main__':
         if key==ord('q'):
             break
 
-        if '難易度' in mmd_str:
+        if LEVEL in mmd_str:
             mei_status.hp, mei_dmg_list = set_level()
 
-        if 'バトル開始' in mmd_str:
+        if START in mmd_str:
             break
 
 
