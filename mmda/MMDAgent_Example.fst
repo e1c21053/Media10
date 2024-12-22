@@ -27,18 +27,15 @@
 # メイはプレイヤーに対して「難易度を選択してください」と発話し、ユーザからの応答を待つ。
 3    20   <eps>                               SYNTH_START|mei|mei_voice_normal|難易度を選択してください。
 20   21   SYNTH_EVENT_STOP|mei                <eps>
-#21   25   MMD_CAMERA_GET|簡単                 VALUE_EVAL|difficulty|EQ|easy
+21   25   MMD_CAMERA_GET|簡単                 SYNTH_START|mei|mei_voice_normal|簡単モードを選択しました。
 21   25   RECOG_EVENT_STOP|簡単                 <eps>
-25  26  <eps>                               SYNTH_START|mei|mei_voice_normal|簡単モードを選択しました。
-# 21   22   RECOG_EVENT_STOP|簡単                 VALUE_SET|difficulty|easy
-21   25   RECOG_EVENT_STOP|普通                 SYNTH_START|mei|mei_voice_normal|普通モードを選択しました。
-21   25   RECOG_EVENT_STOP|難しい               SYNTH_START|mei|mei_voice_normal|難しいモードを選択しました。
-#25  22   <eps>                               SYNTH_START|mei|mei_voice_normal|難易度を選択しました。
+25   26  <eps>                               SYNTH_START|mei|mei_voice_normal|簡単モードを選択しました。
+21  25   RECOG_EVENT_STOP|普通                 <eps>
+25   26  <eps>                               SYNTH_START|mei|mei_voice_normal|普通モードを選択しました。
+21  25   RECOG_EVENT_STOP|難しい                 <eps>
+25   26  <eps>                               SYNTH_START|mei|mei_voice_normal|難しいモードを選択しました。
 
-#25 29 VALUE_EVENT_EVAL|difficulty|EQ|easy|TRUE      SYNTH_START|mei|mei_voice_normal|簡単モードを選択しました。
-#22 29 VALUE_EVENT_EVAL|difficulty|EQ|normal|TRUE    SYNTH_START|mei|mei_voice_normal|普通モードを選択しました。
-#22 29 VALUE_EVENT_EVAL|difficulty|EQ|hard|TRUE      SYNTH_START|mei|mei_voice_normal|難しいモードを選択しました。
-26 9000 SYNTH_EVENT_STOP|mei                           <eps>
+26 40 SYNTH_EVENT_STOP|mei                           <eps>
 
 # ストーリー挿入(仮)
 9000 8001 <eps>                                     SYNTH_START|mei|mei_voice_normal|ストーリー挿入
@@ -52,24 +49,25 @@
 # ルール説明分岐
 40 41 <eps>                                     SYNTH_START|mei|mei_voice_normal|ルール説明をききますか？
 41 42 SYNTH_EVENT_STOP|mei                      <eps>
-#42 50 MMD_CAMERA_GET|はい                     SYNTH_START|mei|mei_voice_normal|ルール説明を開始します。
 42 50 RECOG_EVENT_STOP|はい                     SYNTH_START|mei|mei_voice_normal|ルール説明を開始します。
+42 100 RECOG_EVENT_STOP|いいえ                   SYNTH_START|mei|mei_voice_normal|ルール説明をスキップします。
+
+# debug
+42 50 MMD_CAMERA_GET|はい                     SYNTH_START|mei|mei_voice_normal|ルール説明を開始します。
 42 100 MMD_CAMERA_GET|いいえ                   SYNTH_START|mei|mei_voice_normal|ルール説明をスキップします。
-#42 100 RECOG_EVENT_STOP|いいえ                   SYNTH_START|mei|mei_voice_normal|ルール説明をスキップします。
 
 # ルール説明
 50 51 SYNTH_EVENT_STOP|mei                      <eps>
 51 60 <eps>                                     SYNTH_START|mei|mei_voice_normal|ルール説明1
-#60 100 MMD_CAMERA_GET|次,                    SYNTH_START|mei|mei_voice_normal|ルール説明2
 60 61 SYNTH_EVENT_STOP|mei                      SYNTH_START|mei|mei_voice_normal|ルール説明2
 61 62 SYNTH_EVENT_STOP|mei                      SYNTH_START|mei|mei_voice_normal|ルール説明は以上です。
 62 100 SYNTH_EVENT_STOP|mei                      <eps>
 
+
 # バトル
 100 1001 <eps>                              SYNTH_START|mei|mei_voice_normal|バトル開始
 1001 1002 SYNTH_EVENT_STOP|mei                SYNTH_START|mei|mei_voice_normal|あなたのターンです。
-#1002 1003 MMD_CAMERA_GET|マーカー              SYNTH_START|mei|mei_voice_normal|マーカー認識。
-1002 1003 RECOG_EVENT_STOP|マーカー              SYNTH_START|mei|mei_voice_normal|マーカー認識。
+1002 1003 MMD_CAMERA_GET|マーカー              SYNTH_START|mei|mei_voice_normal|マーカー起動。
 1003 1004 SYNTH_EVENT_STOP|mei                SYNTH_START|mei|mei_voice_normal|お題に挑戦しますか？
 1004 1100 RECOG_EVENT_STOP|はい                  SYNTH_START|mei|mei_voice_normal|お題に挑戦します。
 1004 1007 RECOG_EVENT_STOP|いいえ                SYNTH_START|mei|mei_voice_normal|お題に挑戦しません。
@@ -78,6 +76,10 @@
 1008 300 MMD_CAMERA_GET|防御                 SYNTH_START|mei|mei_voice_normal|防御します。
 1009 400 MMD_CAMERA_GET|回復                 SYNTH_START|mei|mei_voice_normal|回復します。
 1010 7000 <eps>                                <eps>
+
+1004 1100 MMD_CAMERA_GET|はい                  SYNTH_START|mei|mei_voice_normal|お題に挑戦します。
+1004 1007 MMD_CAMERA_GET|いいえ                SYNTH_START|mei|mei_voice_normal|お題に挑戦しません。
+
 
 # ダメ計
 7000 7001 <eps>                                SYNTH_START|mei|mei_voice_normal|ダメージ計算
@@ -120,9 +122,18 @@
 
 # お題待機
 1100 1101 <eps>                                SYNTH_START|mei|mei_voice_normal|お題を表示します。
-1101 1104 MMD_CAMERA_GET|成功                 SYNTH_START|mei|mei_voice_normal|お題成功
-1101 1104 MMD_CAMERA_GET|失敗                 SYNTH_START|mei|mei_voice_normal|お題失敗
-1104 1007 <eps>                <eps>
+1101 1102 SYNTH_EVENT_STOP|mei                <eps>
+1102 1110 MMD_CAMERA_GET|push_ups             SYNTH_START|mei|mei_voice_normal|腕立て伏せ
+1102 1110 MMD_CAMERA_GET|squats               SYNTH_START|mei|mei_voice_normal|スクワット
+1102 1110 MMD_CAMERA_GET|crunches             SYNTH_START|mei|mei_voice_normal|腹筋
+
+1110 1111 MMD_CAMERA_GET|成功                 SYNTH_START|mei|mei_voice_normal|お題成功
+1110 1111 MMD_CAMERA_GET|失敗                 SYNTH_START|mei|mei_voice_normal|お題失敗
+1110 1112 RECOG_EVENT_STOP|ギブアップ,諦める   SYNTH_START|mei|mei_voice_normal|ギブアップしますか？
+1112 1113 RECOG_EVENT_STOP|はい                 SYNTH_START|mei|mei_voice_normal|ギブアップします。
+1112 1110 RECOG_EVENT_STOP|いいえ               SYNTH_START|mei|mei_voice_normal|ギブアップしません。
+1113 1111 SYNTH_EVENT_STOP|mei                <eps>
+1111 1007 <eps>                <eps>
 
 ## 0031-0040 Hello
 #
