@@ -25,7 +25,8 @@
 
 # 起動 難易度選択
 # メイはプレイヤーに対して「難易度を選択してください」と発話し、ユーザからの応答を待つ。
-3 444 TIMER_EVENT_STOP|idle1                   SYNTH_START|mei|mei_voice_normal|ようこそ。はじめましてでよかったでしょうか？
+3 443 TIMER_EVENT_STOP|idle1                   MOTION_ADD|mei|aisatu|Motion\mei_adv\aisatu.vmd|PART|ONCE
+443 444 <eps>                   SYNTH_START|mei|mei_voice_normal|ようこそ。はじめましてでよかったでしょうか？
 444 4 RECOG_EVENT_STOP|はい                   SYNTH_START|mei|mei_voice_normal|わたしのなまえはメイです。みてのとおり、アンドロイドです。
 444 4 MMD_CAMERA_GET|はい                   SYNTH_START|mei|mei_voice_normal|わたしのなまえはメイです。みてのとおり、アンドロイドです。
 444 10 RECOG_EVENT_STOP|いいえ                 SYNTH_START|mei|mei_voice_normal|じゃあやるべきことはわかっていますね？カードのじゅんびはできましたか？
@@ -61,7 +62,8 @@
 
 9102 9103 RECOG_EVENT_STOP|ない,いいえ        SYNTH_START|mei|mei_voice_normal|せつめいはこれでおわりです。ではバトルをはじめましょう。ここをでるためにわたしをたおしてください！
 9102 9103 MMD_CAMERA_GET|いいえ        SYNTH_START|mei|mei_voice_normal|せつめいはこれでおわりです。ではバトルをはじめましょう。ここをでるためにわたしをたおしてください！
-9103 10 SYNTH_EVENT_STOP|mei                   <eps>
+9103 9104 <eps>                              MOTION_ADD|mei|toridasi|Motion\mei_adv\kado_toridasi.vmd|PART|ONCE
+9104 10 SYNTH_EVENT_STOP|mei                   <eps>
 
 10 11 SYNTH_EVENT_STOP|mei                   SYNTH_START|mei|mei_voice_normal|ではバトルをはじめましょう。ここをでるためにわたしをたおしてください！
 
@@ -71,11 +73,11 @@
 20   21   SYNTH_EVENT_STOP|mei                <eps>
 21   25   MMD_CAMERA_GET|簡単                 <eps>
 21   25   RECOG_EVENT_STOP|簡単                 <eps>
-25   26  <eps>                               SYNTH_START|mei|mei_voice_normal|簡単モードを選択しました。
+25   26  <eps>                               SYNTH_START|mei|mei_voice_normal|簡単を選択しました。
 21  25   RECOG_EVENT_STOP|普通                 <eps>
-25   26  <eps>                               SYNTH_START|mei|mei_voice_normal|普通モードを選択しました。
+25   26  <eps>                               SYNTH_START|mei|mei_voice_normal|普通を選択しました。
 21  25   RECOG_EVENT_STOP|難しい                 <eps>
-25   26  <eps>                               SYNTH_START|mei|mei_voice_normal|難しいモードを選択しました。
+25   26  <eps>                               SYNTH_START|mei|mei_voice_normal|難しいを選択しました。
 
 26 100 SYNTH_EVENT_STOP|mei                           <eps>
 
