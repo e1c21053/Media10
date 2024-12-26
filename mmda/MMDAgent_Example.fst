@@ -4,7 +4,7 @@
 11   12   MODEL_EVENT_ADD|bootscreen          MODEL_ADD|mei|Model\mei\mei.pmd|0.0,0.0,-14.0
 12   13   <eps>                               MODEL_ADD|menu|Accessory\menu\menu.pmd|0.0,-4.5,0.0|0.0,0.0,0.0|ON|mei
 13   14   <eps>                               MOTION_ADD|menu|rotate|Motion\menu_rotation\menu_rotation.vmd|FULL|LOOP|OFF|OFF
-14   15   <eps>                               STAGE|Stage\building2\floor.bmp,Stage\building2\background.bmp
+14   15   <eps>                               STAGE|Stage\building2\floor1.bmp,Stage\building2\background1.bmp
 15   16   <eps>                               MOTION_ADD|mei|base|Motion\mei_wait\mei_wait.vmd|FULL|LOOP|ON|OFF
 16   17   <eps>                               TIMER_START|bootscreen|1.5
 17   2    TIMER_EVENT_STOP|bootscreen         MODEL_DELETE|bootscreen
@@ -27,7 +27,7 @@
 # メイはプレイヤーに対して「難易度を選択してください」と発話し、ユーザからの応答を待つ。
 3    20   <eps>                               SYNTH_START|mei|mei_voice_normal|難易度を選択してください。
 20   21   SYNTH_EVENT_STOP|mei                <eps>
-21   25   MMD_CAMERA_GET|簡単                 SYNTH_START|mei|mei_voice_normal|簡単モードを選択しました。
+21   25   MMD_CAMERA_GET|簡単                 <eps>
 21   25   RECOG_EVENT_STOP|簡単                 <eps>
 25   26  <eps>                               SYNTH_START|mei|mei_voice_normal|簡単モードを選択しました。
 21  25   RECOG_EVENT_STOP|普通                 <eps>
@@ -67,15 +67,23 @@
 # バトル
 100 1001 <eps>                              SYNTH_START|mei|mei_voice_normal|バトル開始
 1001 1002 SYNTH_EVENT_STOP|mei                SYNTH_START|mei|mei_voice_normal|あなたのターンです。
-1002 1003 MMD_CAMERA_GET|マーカー              SYNTH_START|mei|mei_voice_normal|マーカー起動。
+1002 1102 SYNTH_EVENT_STOP|mei                SYNTH_START|mei|mei_voice_normal|カメラを起動します。使用するカードをかざしてください。
+1102 1400 MMD_CAMERA_GET|marker              SYNTH_START|mei|mei_voice_normal|カードを認証しました。
+# ここでお題の表示する
+1400 1401 <eps>                                SYNTH_START|mei|mei_voice_normal|それではお題を抽選します。
+1401 1003 MMD_CAMERA_GET|push_ups             SYNTH_START|mei|mei_voice_normal|腕立て伏せ。が選択されました。
+1401 1003 MMD_CAMERA_GET|squats               SYNTH_START|mei|mei_voice_normal|スクワット。が選択されました。
+1401 1003 MMD_CAMERA_GET|crunches             SYNTH_START|mei|mei_voice_normal|腹筋。が選択されました。
+
 1003 1004 SYNTH_EVENT_STOP|mei                SYNTH_START|mei|mei_voice_normal|お題に挑戦しますか？
 1004 1100 RECOG_EVENT_STOP|はい                  SYNTH_START|mei|mei_voice_normal|お題に挑戦します。
 1004 1007 RECOG_EVENT_STOP|いいえ                SYNTH_START|mei|mei_voice_normal|お題に挑戦しません。
 1007 1008 SYNTH_EVENT_STOP|mei               SYNTH_START|mei|mei_voice_normal|カード発動。
-1008 200 MMD_CAMERA_GET|攻撃                 SYNTH_START|mei|mei_voice_normal|攻撃します。
-1008 300 MMD_CAMERA_GET|防御                 SYNTH_START|mei|mei_voice_normal|防御します。
-1009 400 MMD_CAMERA_GET|回復                 SYNTH_START|mei|mei_voice_normal|回復します。
-1010 7000 <eps>                                <eps>
+1008 200 MMD_CAMERA_GET|atk                 <eps>
+1008 300 MMD_CAMERA_GET|def                 <eps>
+1008 400 MMD_CAMERA_GET|heal                 <eps>
+1008 500 MMD_CAMERA_GET|buff                <eps>
+1011 7000 <eps>                                <eps>
 
 1004 1100 MMD_CAMERA_GET|はい                  SYNTH_START|mei|mei_voice_normal|お題に挑戦します。
 1004 1007 MMD_CAMERA_GET|いいえ                SYNTH_START|mei|mei_voice_normal|お題に挑戦しません。
@@ -83,20 +91,21 @@
 
 # ダメ計
 7000 7001 <eps>                                SYNTH_START|mei|mei_voice_normal|ダメージ計算
+7001 7002 SYNTH_EVENT_STOP|mei                <eps>
 # mei<player
-7001 4000 MMD_CAMERA_GET|勝ち                <eps>
+7002 4000 MMD_CAMERA_GET|勝ち                <eps>
 # mei>player
-7001 3000 MMD_CAMERA_GET|負け                <eps>
+7002 3000 MMD_CAMERA_GET|負け                <eps>
 
-7001 1001 MMD_CAMERA_GET|続行                 SYNTH_START|mei|mei_voice_normal|次のターンです。
+7002 1001 MMD_CAMERA_GET|続行                 SYNTH_START|mei|mei_voice_normal|次のターンです。
 
 # mei Win
 3000 3001 <eps>                                SYNTH_START|mei|mei_voice_normal|わたしの勝ちです。
-3001 7000 SYNTH_EVENT_STOP|mei                                <eps>
+3001 7700 SYNTH_EVENT_STOP|mei                                <eps>
 
 # mei Lose
 4000 4001 <eps>                                SYNTH_START|mei|mei_voice_normal|あなたの勝ちです。
-4001 7000 SYNTH_EVENT_STOP|mei                                <eps>
+4001 7700 SYNTH_EVENT_STOP|mei                                <eps>
 
 # 終わり（仮）
 7700 2 <eps>                                     SYNTH_START|mei|mei_voice_normal|ゲーム終了
@@ -119,6 +128,11 @@
 400 401 <eps>                                SYNTH_START|mei|mei_voice_normal|回復します。
 401 402 SYNTH_EVENT_STOP|mei                SYNTH_START|mei|mei_voice_normal|攻撃以外なのでもう一度あなたのターンです。
 402 1001 SYNTH_EVENT_STOP|mei                <eps>
+
+# プレイヤーバフ
+500 501 <eps>                                SYNTH_START|mei|mei_voice_normal|バフをかけます。
+501 502 SYNTH_EVENT_STOP|mei                SYNTH_START|mei|mei_voice_normal|攻撃以外なのでもう一度あなたのターンです。
+502 1001 SYNTH_EVENT_STOP|mei                <eps>
 
 # お題待機
 1100 1101 <eps>                                SYNTH_START|mei|mei_voice_normal|お題を表示します。

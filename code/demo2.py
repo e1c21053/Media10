@@ -19,16 +19,19 @@ NORMAL = '普通'
 HARD = '難しい'
 LEVEL = '難易度'
 START = '開始'
+
 YOUR_TURN = 'あなたのターン'
 MEI_TURN = 'メイのターン'
-MARKER = 'マーカー'
+MARKER = 'marker'
 
 INVOKE = "カード発動"
 
-ATTACK_CARD = '攻撃'
-GUARD_CARD = '防御'
-HEAL_CARD = '回復'
-CHALLENGE = 'お題を表示します'
+ATTACK_CARD = 'atk'
+GUARD_CARD = 'def'
+HEAL_CARD = 'heal'
+BUFF_CARD = 'buff'
+CHALLENGE = 'お題に挑戦します。'
+PICK_CHALLENGE = 'それではお題を抽選します。'
 
 PUSH_UPS = "push_ups"
 SQUATS = "squats"
@@ -42,6 +45,12 @@ CHECK_WIN = "ダメージ計算"
 WIN = "勝ち"
 LOSE = "負け"
 CONTINUE = "続行"
+
+mei_damage_table = {
+    EASY: [(10, 0.5), (20, 0.3), (30, 0.2)],
+    NORMAL: [(20, 0.5), (30, 0.3), (40, 0.2)],
+    HARD: [(30, 0.5), (40, 0.3), (50, 0.2)]
+}
 
 
 class mmd():
@@ -59,6 +68,7 @@ class mmd():
                 str = line.decode()
             except UnicodeDecodeError:
                 print("Decode Error")
+                print(line)
             self.mm.seek(0x0)
             self.mm.write(b'\x00')
         return str
@@ -73,6 +83,10 @@ class status:
     def __init__(self, hp, ap):
         self.hp = hp
         self.ap = ap
+        self.gp = 0
+
+    def __str__(self):
+        return f"HP: {self.hp}, AP: {self.ap}"
 
 
 class Card:
@@ -94,6 +108,7 @@ class GameDebug():
         self.difficulty = EASY
         self._mei = status(100, 0)
         self._player = status(100, 0)
+        self.mode = None
         self.is_cleared = False
         self.cap: cv2.VideoCapture = cv2.VideoCapture(0)
         self.cards: list[Card] = []
@@ -141,42 +156,88 @@ class GameDebug():
             self.player_turn()
         elif MEI_TURN in message:
             self.mei_turn()
+        elif PICK_CHALLENGE in message:
+            self.pick_challenge()
         elif CHALLENGE in message:
             self.challenge()
-        elif START in message:
-            self.battle()
-        elif MARKER in message:
-            self.select_card()
         elif INVOKE in message:
             self.invoke_card()
-        # ...additional message handling...
+        elif CHECK_WIN in message:
+            self.check_win()
+
+    def end_game(self):
+        if self.mei.hp <= 0:
+            print("You win")
+            return True
+        elif self.player.hp <= 0:
+            print("You lose")
+            return True
+        return False
 
     def player_turn(self):
         print("player turn")
-        self.wait(1)
+        print(f"player : {self.player.__str__()}, mei : {self.mei.__str__()}")
+        self.select_card()
+        self.wait(2)
         mmd().send_message(MARKER.encode())
 
     def select_card(self):
-        # あとでarucoを使ってカードを選択するようにする
+        print("select card")
         self.wait(3)
-        self.active_card = np.random.choice(self.cards)
+        # cv2のバージョンが古いとこっちを使う
+        # dict = aruco.Dictionary_get(aruco.DICT_6X6_100)
+        # parameters = aruco.DetectorParameters_create()
+        dict = aruco.getPredefinedDictionary(aruco.DICT_6X6_100)
+        parameters = aruco.DetectorParameters()
+        while not self.active_card:
+            ret, frame = self.cap.read()
+            corners, ids, rejectedImgPoints = aruco.detectMarkers(
+                frame, dict, parameters=parameters)
+            frame = aruco.drawDetectedMarkers(frame, corners, ids)
+            if ids is not None:
+                print(ids)
+                for i in range(len(ids)):
+                    card_id = int(ids[i][0])
+                    if card_id < len(self.cards):
+                        self.active_card = self.cards[card_id]
+                        break
+                break
+            cv2.imshow('QR', frame)
+            if cv2.waitKey(10) & 0xFF == ord('q'):
+                break
+        cv2.destroyWindow('QR')
         self.active_card.set_used(True)
         print(f"selected card: {self.active_card.name}")
 
     def invoke_card(self):
         print("invoke card")
+        self.wait(1)
+        print(
+            f"active card: {self.active_card.name}, type: {self.active_card.type}, value: {self.active_card.value}, bonus: {self.active_card.bonusValue}")
+
         if self.active_card.type == ATTACK_CARD:
             self.mei.hp -= self.active_card.value
+            print(f"attack: {self.active_card.value}")
             mmd().send_message(ATTACK_CARD.encode())
         elif self.active_card.type == GUARD_CARD:
             self.mei.ap += self.active_card.value
+            print(f"guard: {self.active_card.value}")
             mmd().send_message(GUARD_CARD.encode())
         elif self.active_card.type == HEAL_CARD:
             self.player.hp += self.active_card.value
+            print(f"heal: {self.active_card.value}")
             mmd().send_message(HEAL_CARD.encode())
+        elif self.active_card.type == BUFF_CARD:
+            self.player.ap += self.active_card.bonusValue
+            print(f"buff: {self.active_card.bonusValue}")
+            mmd().send_message(BUFF_CARD.encode())
+        else:
+            print("Invalid card type")
 
     def check_win(self):
         print("check win")
+        print(f"player : {self.player.__str__()}, mei : {self.mei.__str__()}")
+        self.wait(3)
         if self.mei.hp <= 0:
             print("プレイヤーの勝利")
             mmd().send_message(WIN.encode())
@@ -186,16 +247,25 @@ class GameDebug():
         else:
             print("続行")
             mmd().send_message(CONTINUE.encode())
+        self.active_card = None
+        self.mode = None
 
     def mei_turn(self):
-        # Logic for Mei's turn
-        pass
+        def get_random_dmg(dmg_list: list[tuple[int, float]]) -> int:
+            """
+            list[tuple[int,float] int はダメージ量, float は確率を引数に取り，確率に応じてダメージ量を返す関数
+            例: get_random_dmg([(10, 0.5), (20, 0.3), (30, 0.2)]) は, 10の確率0.5, 20の確率0.3, 30の確率0.2でダメージ量を返す
+            """
+            return np.random.choice([dmg[0] for dmg in dmg_list], p=[dmg[1] for dmg in dmg_list])
+        self.wait(1)
+        dmg = get_random_dmg([(10, 0.5), (20, 0.3), (30, 0.2)])
+        self.player.hp -= dmg
+        print(f"メイの攻撃: {dmg}のダメージ")
 
     def exercise_challenge(self, mode):
         recognizer = exercise.ExerciseRecognizer()
         while True:
             ret, frame = self.cap.read()
-            # 何故か認識部分だけ重い 謎
             frame = recognizer.recognize_exercise(frame, mode)
             cv2.imshow('exercise', frame)
 
@@ -216,14 +286,19 @@ class GameDebug():
                 break
 
         cv2.destroyWindow('exercise')
-        return self.is_cleared
+
+    def pick_challenge(self):
+        print("pick challenge")
+        self.wait(1)
+        mode = np.random.choice([PUSH_UPS, SQUATS, CRUNCHES])
+        self.wait(1)
+        mmd().send_message(mode.encode())
+        print(f"challenge: {mode}")
+        self.mode = mode
 
     def challenge(self):
         print("challenge")
-        mode = np.random.choice([PUSH_UPS, SQUATS, CRUNCHES])
-        self.wait(3)
-        mmd().send_message(mode.encode())
-        self.exercise_challenge(mode)
+        self.exercise_challenge(self.mode)
         if self.is_cleared:
             print("成功！")
             mmd().send_message(SUCCESS.encode())
@@ -231,11 +306,20 @@ class GameDebug():
             print("失敗！")
             mmd().send_message(FAILURE.encode())
 
-        # ここでバフとかデバフとか処理する
-
-    def battle(self):
-        # Logic for battle
-        pass
+        ac = self.active_card
+        if ac.type == ATTACK_CARD:
+            calc = self.mei.hp - ac.value
+            self.mei.hp = calc if calc > 0 else 0
+        elif ac.type == GUARD_CARD:
+            calc = self.player.gp + ac.value
+            self.player.gp = calc if calc > 0 else 0
+        elif ac.type == HEAL_CARD:
+            calc = self.player.hp + ac.value
+            self.player.hp = calc if calc > 100 else 100
+        elif ac.type == BUFF_CARD:
+            self.player.ap += ac.bonusValue
+        else:
+            print("Invalid card type")
 
     def message_listener(self):
         mmd_agent = mmd()
@@ -250,8 +334,10 @@ class GameDebug():
         listener_thread.daemon = True
         listener_thread.start()
         # Main game loop
-        while True:
-            pass
+        while not self.end_game():
+            ret, frame = self.cap.read()
+            if cv2.waitKey(1) & 0xFF == ord('q'):
+                break
 
     def wait(self, wait):
         print(f"waiting for {wait} seconds")
