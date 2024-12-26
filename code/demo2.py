@@ -1,6 +1,7 @@
 from recognizer import color
 from recognizer import exercise
 from cv2 import aruco
+from packaging import version
 import pandas as pd
 import numpy as np
 import mmap
@@ -45,6 +46,8 @@ CRUNCHES = "crunches"
 
 SUCCESS = "成功"
 FAILURE = "失敗"
+
+ACTION_ATTACK = "あなたの力をわたしに見せてください。"
 
 CHECK_WIN = "ダメージ計算"
 
@@ -185,15 +188,26 @@ class GameDebug():
         self.select_card()
         self.wait(2)
         mmd().send_message(MARKER.encode())
+        self.wait(3)
+        mmd().send_message(self.active_card.type.encode())
+
+    def player_attack(self):
+        print("player attack")
+        self.wait(1)
+        pass
 
     def select_card(self):
         print("select card")
         self.wait(3)
-        # cv2のバージョンが古いとこっちを使う
-        # dict = aruco.Dictionary_get(aruco.DICT_6X6_100)
-        # parameters = aruco.DetectorParameters_create()
-        dict = aruco.getPredefinedDictionary(aruco.DICT_6X6_100)
-        parameters = aruco.DetectorParameters()
+        dict = None
+        parameters = None
+        if version.parse(cv2.__version__) < version.parse('4.7.0'):
+            # cv2のバージョンが古いとこっちを使う
+            dict = aruco.Dictionary_get(aruco.DICT_6X6_100)
+            parameters = aruco.DetectorParameters_create()
+        else:
+            dict = aruco.getPredefinedDictionary(aruco.DICT_6X6_100)
+            parameters = aruco.DetectorParameters()
         while not self.active_card:
             ret, frame = self.cap.read()
             corners, ids, rejectedImgPoints = aruco.detectMarkers(
@@ -300,7 +314,8 @@ class GameDebug():
                 break
             if init_frame_color is None:
                 init_frame_color = recognizer.recognize_color(frame)
-                col = np.random.choice([color for color in [RED, GREEN, BLUE] if color != init_frame_color])
+                col = np.random.choice(
+                    [color for color in [RED, GREEN, BLUE] if color != init_frame_color])
             color_name = recognizer.recognize_specific_color(frame, col)
             if color_name == last_color:
                 if start_time is None:

@@ -1,7 +1,7 @@
 # 0011-0020 Initialization
 
 0    11   <eps>                               MODEL_ADD|bootscreen|Accessory\bootscreen\bootscreen.pmd|0.0,12.85,17.6|0.0,0.0,0.0|OFF
-11   12   MODEL_EVENT_ADD|bootscreen          MODEL_ADD|mei|Model\mei\mei.pmd|0.0,0.0,-14.0
+11   12   MODEL_EVENT_ADD|bootscreen          MODEL_ADD|mei|Model\PMD\PMD\new.pmd|0.0,0.0,-14.0
 12   13   <eps>                               MODEL_ADD|menu|Accessory\menu\menu.pmd|0.0,-4.5,0.0|0.0,0.0,0.0|ON|mei
 13   14   <eps>                               MOTION_ADD|menu|rotate|Motion\menu_rotation\menu_rotation.vmd|FULL|LOOP|OFF|OFF
 14   15   <eps>                               STAGE|Stage\building2\floor1.bmp,Stage\building2\background1.bmp
@@ -107,13 +107,13 @@
 
 
 # バトル
-100 1001 <eps>                              SYNTH_START|mei|mei_voice_normal|バトル開始。
+100 1001 <eps>                              SYNTH_START|mei|mei_voice_normal|それでは勝負開始。
 1001 1002 SYNTH_EVENT_STOP|mei                SYNTH_START|mei|mei_voice_normal|あなたのターンです。カードを1まいひいてください
 1002 1102 SYNTH_EVENT_STOP|mei                SYNTH_START|mei|mei_voice_normal|カメラを起動します。使用するカードをかざしてください。
 1102 1300 MMD_CAMERA_GET|marker              SYNTH_START|mei|mei_voice_normal|カードを読み込みました。
 # ここでお題の表示する （攻撃カードならなし？）
 1300 1301 SYNTH_EVENT_STOP|mei                <eps>
-1301 200 MMD_CAMERA_GET|atk                <eps>
+1301 1007 MMD_CAMERA_GET|atk                <eps>
 1301 1400 MMD_CAMERA_GET|def                <eps>
 1301 1400 MMD_CAMERA_GET|heal                <eps>
 1301 1400 MMD_CAMERA_GET|buff                <eps>
@@ -166,8 +166,7 @@
 # プレイヤー攻撃
 200 201 <eps>                                SYNTH_START|mei|mei_voice_normal|攻撃カードを読み込みました。
 201 202 SYNTH_EVENT_STOP|mei                SYNTH_START|mei|mei_voice_normal|あなたの力をわたしに見せてください。
-202 203 SYNTH_EVENT_STOP|mei                <eps>
-203 204 MMD_CAMERA_GET|atk                 <eps>
+202 204 SYNTH_EVENT_STOP|mei                <eps>
 204 205 <eps>                                SYNTH_START|mei|mei_voice_normal|なかなかやりますね。
 205 206 SYNTH_EVENT_STOP|mei                <eps>
 206 7000 <eps>                                <eps>
