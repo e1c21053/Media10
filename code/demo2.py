@@ -27,11 +27,17 @@ MARKER = 'marker'
 INVOKE = "カード発動"
 
 ATTACK_CARD = 'atk'
+
 GUARD_CARD = 'def'
 HEAL_CARD = 'heal'
 BUFF_CARD = 'buff'
+
 CHALLENGE = 'お題に挑戦します。'
 PICK_CHALLENGE = 'それではお題を抽選します。'
+
+RED = 'red'
+GREEN = 'green'
+BLUE = 'blue'
 
 PUSH_UPS = "push_ups"
 SQUATS = "squats"
@@ -68,7 +74,6 @@ class mmd():
                 str = line.decode()
             except UnicodeDecodeError:
                 print("Decode Error")
-                print(line)
             self.mm.seek(0x0)
             self.mm.write(b'\x00')
         return str
@@ -258,7 +263,7 @@ class GameDebug():
             """
             return np.random.choice([dmg[0] for dmg in dmg_list], p=[dmg[1] for dmg in dmg_list])
         self.wait(1)
-        dmg = get_random_dmg([(10, 0.5), (20, 0.3), (30, 0.2)])
+        dmg = get_random_dmg(mei_damage_table[self.difficulty])
         self.player.hp -= dmg
         print(f"メイの攻撃: {dmg}のダメージ")
 
@@ -284,13 +289,38 @@ class GameDebug():
             elif mode == 'crunches' and recognizer.crunch_count == 10:
                 self.is_cleared = True
                 break
-
         cv2.destroyWindow('exercise')
+
+    def color_challenge(self):
+        recognizer = color.ColorRecognizer()
+        init_frame_color = None
+        while True:
+            ret, frame = self.cap.read()
+            if not ret:
+                break
+            if init_frame_color is None:
+                init_frame_color = recognizer.recognize_color(frame)
+                col = np.random.choice([color for color in [RED, GREEN, BLUE] if color != init_frame_color])
+            color_name = recognizer.recognize_specific_color(frame, col)
+            if color_name == last_color:
+                if start_time is None:
+                    start_time = time.time()
+                elif time.time() - start_time > 5:
+                    print(f"{color_name} recognized for more than 5 seconds.")
+                    break
+            else:
+                start_time = None
+                last_color = color_name
+
+            cv2.imshow('frame', frame)
+            if cv2.waitKey(1) & 0xFF == ord('q'):
+                break
+        cv2.destroyWindow('color')
 
     def pick_challenge(self):
         print("pick challenge")
         self.wait(1)
-        mode = np.random.choice([PUSH_UPS, SQUATS, CRUNCHES])
+        mode = np.random.choice([PUSH_UPS, SQUATS, CRUNCHES, RED, GREEN, BLUE])
         self.wait(1)
         mmd().send_message(mode.encode())
         print(f"challenge: {mode}")
