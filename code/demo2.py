@@ -25,15 +25,18 @@ YOUR_TURN = 'あなたのターン'
 MEI_TURN = 'メイのターン'
 MARKER = 'marker'
 
-INVOKE = "カード発動"
+INVOKE = "カードを発動します"
 
 ATTACK_CARD = 'atk'
 
+ERROR = 'ERROR'
+
+USED = 'used'
 GUARD_CARD = 'def'
 HEAL_CARD = 'heal'
 BUFF_CARD = 'buff'
 
-CHALLENGE = 'お題に挑戦します。'
+CHALLENGE = 'お題を表示します。'
 PICK_CHALLENGE = 'それではお題を抽選します。'
 
 RED = 'red'
@@ -77,6 +80,7 @@ class mmd():
                 str = line.decode()
             except UnicodeDecodeError:
                 print("Decode Error")
+                self.send_message(ERROR.encode())
             self.mm.seek(0x0)
             self.mm.write(b'\x00')
         return str
@@ -168,6 +172,9 @@ class GameDebug():
             self.pick_challenge()
         elif CHALLENGE in message:
             self.challenge()
+        elif "カードを読み込みました。" in message:
+            print("card loaded")
+            print(self.active_card.type)
         elif INVOKE in message:
             self.invoke_card()
         elif CHECK_WIN in message:
@@ -188,7 +195,7 @@ class GameDebug():
         self.select_card()
         self.wait(2)
         mmd().send_message(MARKER.encode())
-        self.wait(3)
+        self.wait(4)
         mmd().send_message(self.active_card.type.encode())
 
     def player_attack(self):
@@ -218,40 +225,49 @@ class GameDebug():
                 for i in range(len(ids)):
                     card_id = int(ids[i][0])
                     if card_id < len(self.cards):
-                        self.active_card = self.cards[card_id]
-                        break
-                break
+                        if not self.cards[card_id].used:
+                            self.active_card = self.cards[card_id]
+                            break
+                        else:
+                            print("card already used")
+                            mmd().send_message(USED.encode())
+                    else:
+                        print("invalid card")
             cv2.imshow('QR', frame)
             if cv2.waitKey(10) & 0xFF == ord('q'):
                 break
-        cv2.destroyWindow('QR')
+        try:
+            cv2.destroyWindow('QR')
+        except:
+            pass
         self.active_card.set_used(True)
         print(f"selected card: {self.active_card.name}")
 
     def invoke_card(self):
         print("invoke card")
-        self.wait(1)
+        self.wait(3)
         print(
             f"active card: {self.active_card.name}, type: {self.active_card.type}, value: {self.active_card.value}, bonus: {self.active_card.bonusValue}")
 
         if self.active_card.type == ATTACK_CARD:
-            self.mei.hp -= self.active_card.value
-            print(f"attack: {self.active_card.value}")
+            self.mei.hp -= self.player.ap + self.active_card.value
+            print(f"attack: {self.player.ap + self.active_card.value}")
             mmd().send_message(ATTACK_CARD.encode())
         elif self.active_card.type == GUARD_CARD:
-            self.mei.ap += self.active_card.value
-            print(f"guard: {self.active_card.value}")
+            self.player.gp += self.active_card.value if self.is_cleared else self.active_card.bonusValue
+            print(f"guard: {self.active_card.value if self.is_cleared else self.active_card.bonusValue}")
             mmd().send_message(GUARD_CARD.encode())
         elif self.active_card.type == HEAL_CARD:
-            self.player.hp += self.active_card.value
-            print(f"heal: {self.active_card.value}")
+            self.player.hp += self.active_card.value if self.is_cleared else self.active_card.bonusValue
+            print(f"heal: {self.active_card.value if self.is_cleared else self.active_card.bonusValue}")
             mmd().send_message(HEAL_CARD.encode())
         elif self.active_card.type == BUFF_CARD:
-            self.player.ap += self.active_card.bonusValue
-            print(f"buff: {self.active_card.bonusValue}")
+            self.player.ap += self.active_card.value if self.is_cleared else self.active_card.bonusValue
+            print(f"buff: {self.active_card.value if self.is_cleared else self.active_card.bonusValue}")
             mmd().send_message(BUFF_CARD.encode())
         else:
             print("Invalid card type")
+        self.active_card = None
 
     def check_win(self):
         print("check win")
@@ -266,7 +282,6 @@ class GameDebug():
         else:
             print("続行")
             mmd().send_message(CONTINUE.encode())
-        self.active_card = None
         self.mode = None
 
     def mei_turn(self):
@@ -278,14 +293,14 @@ class GameDebug():
             return np.random.choice([dmg[0] for dmg in dmg_list], p=[dmg[1] for dmg in dmg_list])
         self.wait(1)
         dmg = get_random_dmg(mei_damage_table[self.difficulty])
-        self.player.hp -= dmg
+        self.player.hp -= dmg + self.player.gp
         print(f"メイの攻撃: {dmg}のダメージ")
 
-    def exercise_challenge(self, mode):
+    def exercise_challenge(self):
         recognizer = exercise.ExerciseRecognizer()
         while True:
             ret, frame = self.cap.read()
-            frame = recognizer.recognize_exercise(frame, mode)
+            frame = recognizer.recognize_exercise(frame, self.mode)
             cv2.imshow('exercise', frame)
 
             if cv2.waitKey(10) & 0xFF == ord('q'):
@@ -294,13 +309,13 @@ class GameDebug():
             if self.give_up_challenge:
                 break
 
-            if mode == 'push_ups' and recognizer.push_up_count == 10:
+            if self.mode == 'push_ups' and recognizer.push_up_count == 10:
                 self.is_cleared = True
                 break
-            elif mode == 'squats' and recognizer.squat_count == 10:
+            elif self.mode == 'squats' and recognizer.squat_count == 10:
                 self.is_cleared = True
                 break
-            elif mode == 'crunches' and recognizer.crunch_count == 10:
+            elif self.mode == 'crunches' and recognizer.crunch_count == 10:
                 self.is_cleared = True
                 break
         cv2.destroyWindow('exercise')
@@ -308,6 +323,7 @@ class GameDebug():
     def color_challenge(self):
         recognizer = color.ColorRecognizer()
         init_frame_color = None
+        previous_detected = None
         while True:
             ret, frame = self.cap.read()
             if not ret:
@@ -316,21 +332,24 @@ class GameDebug():
                 init_frame_color = recognizer.recognize_color(frame)
                 col = np.random.choice(
                     [color for color in [RED, GREEN, BLUE] if color != init_frame_color])
-            color_name = recognizer.recognize_specific_color(frame, col)
-            if color_name == last_color:
+            is_detected = recognizer.recognize_specific_color(frame, col)
+            if is_detected == previous_detected:
                 if start_time is None:
                     start_time = time.time()
                 elif time.time() - start_time > 5:
-                    print(f"{color_name} recognized for more than 5 seconds.")
+                    print(f"{col} recognized for more than 5 seconds.")
                     break
             else:
                 start_time = None
-                last_color = color_name
+                previous_detected = is_detected
 
             cv2.imshow('frame', frame)
             if cv2.waitKey(1) & 0xFF == ord('q'):
                 break
-        cv2.destroyWindow('color')
+        try:
+            cv2.destroyWindow('color')
+        except:
+            pass
 
     def pick_challenge(self):
         print("pick challenge")
@@ -343,7 +362,10 @@ class GameDebug():
 
     def challenge(self):
         print("challenge")
-        self.exercise_challenge(self.mode)
+        if self.mode in [RED, GREEN, BLUE]:
+            self.color_challenge()
+        else:
+            self.exercise_challenge()
         if self.is_cleared:
             print("成功！")
             mmd().send_message(SUCCESS.encode())
@@ -365,6 +387,8 @@ class GameDebug():
             self.player.ap += ac.bonusValue
         else:
             print("Invalid card type")
+
+        self.wait(1)
 
     def message_listener(self):
         mmd_agent = mmd()
