@@ -26,7 +26,8 @@
 # 起動 難易度選択
 # メイはプレイヤーに対して「難易度を選択してください」と発話し、ユーザからの応答を待つ。
 3 443 TIMER_EVENT_STOP|idle1                   MOTION_ADD|mei|aisatu|Motion\mei_adv\aisatu.vmd|PART|ONCE
-443 444 <eps>                   SYNTH_START|mei|mei_voice_normal|ようこそ。はじめましてでよかったでしょうか？
+443 25 <eps>                               <eps>
+# 443 444 <eps>                   SYNTH_START|mei|mei_voice_normal|ようこそ。はじめましてでよかったでしょうか？
 444 4 RECOG_EVENT_STOP|はい                   SYNTH_START|mei|mei_voice_normal|わたしのなまえはメイです。みてのとおり、アンドロイドです。
 444 4 MMD_CAMERA_GET|はい                   SYNTH_START|mei|mei_voice_normal|わたしのなまえはメイです。みてのとおり、アンドロイドです。
 444 10 RECOG_EVENT_STOP|いいえ                 SYNTH_START|mei|mei_voice_normal|じゃあやるべきことはわかっていますね？カードのじゅんびはできましたか？
@@ -81,38 +82,15 @@
 
 26 100 SYNTH_EVENT_STOP|mei                           <eps>
 
-# ストーリー挿入(仮)
-9000 8001 <eps>                                     SYNTH_START|mei|mei_voice_normal|ストーリー挿入
-
-# meiモデル表示 (上で定義してるモデル表示を後で消しておく)
-8001 31 <eps>                                     MODEL_ADD|mei|Model\mei\mei.pmd|0.0,0.0,-14.0
-
-# ?
-31 40 <eps>                                     <eps>
-
-# ルール説明分岐
-#40 41 <eps>                                     SYNTH_START|mei|mei_voice_normal|ルール説明をききますか？
-#41 42 SYNTH_EVENT_STOP|mei                      <eps>
-#42 50 RECOG_EVENT_STOP|はい                     SYNTH_START|mei|mei_voice_normal|ルール説明を開始します。
-#42 100 RECOG_EVENT_STOP|いいえ                   SYNTH_START|mei|mei_voice_normal|ルール説明をスキップします。
-
-# debug
-#42 50 MMD_CAMERA_GET|はい                     SYNTH_START|mei|mei_voice_normal|ルール説明を開始します。
-#42 100 MMD_CAMERA_GET|いいえ                   SYNTH_START|mei|mei_voice_normal|ルール説明をスキップします。
-
-# ルール説明
-#50 51 SYNTH_EVENT_STOP|mei                      <eps>
-#51 60 <eps>                                     SYNTH_START|mei|mei_voice_normal|ルール説明1
-#60 61 SYNTH_EVENT_STOP|mei                      SYNTH_START|mei|mei_voice_normal|ルール説明2
-#61 62 SYNTH_EVENT_STOP|mei                      SYNTH_START|mei|mei_voice_normal|ルール説明は以上です。
-#62 100 SYNTH_EVENT_STOP|mei                      <eps>
-
 
 # バトル
-100 1001 <eps>                              SYNTH_START|mei|mei_voice_normal|それでは勝負開始。
-1001 1002 SYNTH_EVENT_STOP|mei                SYNTH_START|mei|mei_voice_normal|あなたのターンです。カードを1まいひいてください
+100 999 <eps>                              SYNTH_START|mei|mei_voice_normal|それでは勝負開始。
+999 1001  SYNTH_EVENT_STOP|mei                          <eps>
+1001 1002 <eps>                             SYNTH_START|mei|mei_voice_normal|あなたのターンです。カードを1まいひいてください
 1002 1102 SYNTH_EVENT_STOP|mei                SYNTH_START|mei|mei_voice_normal|カメラを起動します。使用するカードをかざしてください。
 1102 1300 MMD_CAMERA_GET|marker              SYNTH_START|mei|mei_voice_normal|カードを読み込みました。
+1102 1331 MMD_CAMERA_GET|used                SYNTH_START|mei|mei_voice_normal|使用済みのカードです。別のカードをかざしてください。
+1331 1102 SYNTH_EVENT_STOP|mei                <eps>
 # ここでお題の表示する （攻撃カードならなし？）
 1300 1301 SYNTH_EVENT_STOP|mei                <eps>
 1301 1007 MMD_CAMERA_GET|atk                <eps>
@@ -120,6 +98,7 @@
 1301 1400 MMD_CAMERA_GET|heal                <eps>
 1301 1400 MMD_CAMERA_GET|buff                <eps>
 1400 1401 <eps>                                SYNTH_START|mei|mei_voice_normal|とくしゅカードをよみこみました。それではお題を抽選します。
+    1401 1400 MMD_CAMERA_GET|ERROR              <eps>
 1401 1003 MMD_CAMERA_GET|push_ups             SYNTH_START|mei|mei_voice_normal|腕立て伏せ。が選択されました。
 1401 1003 MMD_CAMERA_GET|squats               SYNTH_START|mei|mei_voice_normal|スクワット。が選択されました。
 1401 1003 MMD_CAMERA_GET|crunches             SYNTH_START|mei|mei_voice_normal|腹筋。が選択されました。
@@ -129,8 +108,9 @@
 
 1003 1004 SYNTH_EVENT_STOP|mei                SYNTH_START|mei|mei_voice_normal|お題に挑戦しますか？
 1004 1100 RECOG_EVENT_STOP|はい                  SYNTH_START|mei|mei_voice_normal|お題に挑戦します。それではがんばってください、むずかしいときは、「ギブアップ」ということでしっぱいあつかいでしゅうりょうできます
-1004 1007 RECOG_EVENT_STOP|いいえ                SYNTH_START|mei|mei_voice_normal|お題に挑戦しません。こんかいは,ついかこうかなしでとくしゅこうかをはつどうします。
-1007 1008 SYNTH_EVENT_STOP|mei               SYNTH_START|mei|mei_voice_normal|カードを発動します。
+1004 1507 RECOG_EVENT_STOP|いいえ                SYNTH_START|mei|mei_voice_normal|お題に挑戦しません。こんかいは,ついかこうかなしでとくしゅこうかをはつどうします。
+1507 1007 SYNTH_EVENT_STOP|mei               <eps>
+1007 1008 <eps>                            SYNTH_START|mei|mei_voice_normal|カードを発動します。
 1008 200 MMD_CAMERA_GET|atk                 <eps>
 1008 300 MMD_CAMERA_GET|def                 <eps>
 1008 400 MMD_CAMERA_GET|heal                 <eps>
@@ -138,7 +118,7 @@
 1011 7000 <eps>                                <eps>
 
 1004 1100 MMD_CAMERA_GET|はい                  SYNTH_START|mei|mei_voice_normal|お題に挑戦します。それではがんばってください、むずかしいときは、「ギブアップ」ということでしっぱいあつかいでしゅうりょうできます
-1004 1007 MMD_CAMERA_GET|いいえ                SYNTH_START|mei|mei_voice_normal|お題に挑戦しません。こんかいは,ついかこうかなしでとくしゅこうかをはつどうします。
+1004 1507 MMD_CAMERA_GET|いいえ                SYNTH_START|mei|mei_voice_normal|お題に挑戦しません。こんかいは,ついかこうかなしでとくしゅこうかをはつどうします。
 
 
 # ダメ計
@@ -166,12 +146,12 @@
 
 
 # プレイヤー攻撃
-200 201 <eps>                                SYNTH_START|mei|mei_voice_normal|攻撃カードを読み込みました。
+200 201 <eps>                                SYNTH_START|mei|mei_voice_normal|攻撃カードですね。
 201 202 SYNTH_EVENT_STOP|mei                SYNTH_START|mei|mei_voice_normal|あなたの力をわたしに見せてください。
 202 204 SYNTH_EVENT_STOP|mei                <eps>
 204 205 <eps>                                SYNTH_START|mei|mei_voice_normal|なかなかやりますね。
 205 206 SYNTH_EVENT_STOP|mei                <eps>
-206 7000 <eps>                                <eps>
+206 600 <eps>                                <eps>
 
 # mei攻撃
 600 601 <eps>                                SYNTH_START|mei|mei_voice_normal|さて、わたしのターンですね！くらえ！
@@ -194,15 +174,19 @@
 502 1001 SYNTH_EVENT_STOP|mei                <eps>
 
 # お題待機
-1100 1101 <eps>                                SYNTH_START|mei|mei_voice_normal|お題を表示します。
-1101 1102 SYNTH_EVENT_STOP|mei                <eps>
-1102 1110 MMD_CAMERA_GET|push_ups             SYNTH_START|mei|mei_voice_normal|腕立て伏せ
-1102 1110 MMD_CAMERA_GET|squats               SYNTH_START|mei|mei_voice_normal|スクワット
-1102 1110 MMD_CAMERA_GET|crunches             SYNTH_START|mei|mei_voice_normal|腹筋
+1100 1101 SYNTH_EVENT_STOP|mei                SYNTH_START|mei|mei_voice_normal|お題を表示します。
+1101 1110 SYNTH_EVENT_STOP|mei                <eps>
+#1102 1110 MMD_CAMERA_GET|push_ups             SYNTH_START|mei|mei_voice_normal|腕立て伏せ
+#1102 1110 MMD_CAMERA_GET|squats               SYNTH_START|mei|mei_voice_normal|スクワット
+#1102 1110 MMD_CAMERA_GET|crunches             SYNTH_START|mei|mei_voice_normal|腹筋
+#1102 1110 MMD_CAMERA_GET|red                SYNTH_START|mei|mei_voice_normal|赤色
+#1102 1110 MMD_CAMERA_GET|blue                SYNTH_START|mei|mei_voice_normal|青色
+#1102 1110 MMD_CAMERA_GET|green                SYNTH_START|mei|mei_voice_normal|緑色
 
 1110 1111 MMD_CAMERA_GET|成功                 SYNTH_START|mei|mei_voice_normal|お題成功
 1110 1111 MMD_CAMERA_GET|失敗                 SYNTH_START|mei|mei_voice_normal|お題失敗
-1110 1112 RECOG_EVENT_STOP|ギブアップ,諦める   SYNTH_START|mei|mei_voice_normal|ギブアップしますか？
+1110 1112 RECOG_EVENT_STOP|ギブアップ           SYNTH_START|mei|mei_voice_normal|ギブアップしますか？
+1110 1112 RECOG_EVENT_STOP|諦める            SYNTH_START|mei|mei_voice_normal|ギブアップしますか？
 1112 1113 RECOG_EVENT_STOP|はい                 SYNTH_START|mei|mei_voice_normal|ギブアップします。
 1112 1110 RECOG_EVENT_STOP|いいえ               SYNTH_START|mei|mei_voice_normal|ギブアップしません。
 1113 1111 SYNTH_EVENT_STOP|mei                <eps>
