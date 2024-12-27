@@ -22,7 +22,7 @@ LEVEL = '難易度'
 START = '開始'
 
 YOUR_TURN = 'あなたのターン'
-MEI_TURN = 'メイのターン'
+MEI_TURN = 'わたしのターン'
 MARKER = 'marker'
 
 INVOKE = "カードを発動します"
@@ -113,6 +113,10 @@ class Card:
     def set_used(self, used: bool):
         self.used = used
 
+    def get_image(self):
+        # pathはname_type_id.png
+        path = f"code\\imgs\\{self.name}_{self.type}_{self.id}.png"
+        return cv2.imread(path)
 
 class GameDebug():
     def __init__(self):
@@ -245,6 +249,10 @@ class GameDebug():
 
     def invoke_card(self):
         print("invoke card")
+        # ここでcv2を使ってカードの画像を表示する
+        card_img = self.active_card.get_image()
+        if card_img:
+            cv2.imshow('card', card_img)
         self.wait(3)
         print(
             f"active card: {self.active_card.name}, type: {self.active_card.type}, value: {self.active_card.value}, bonus: {self.active_card.bonusValue}")
@@ -268,6 +276,10 @@ class GameDebug():
         else:
             print("Invalid card type")
         self.active_card = None
+        try:
+            cv2.destroyWindow('card')
+        except:
+            pass
 
     def check_win(self):
         print("check win")

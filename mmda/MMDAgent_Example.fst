@@ -26,12 +26,12 @@
 # 起動 難易度選択
 # メイはプレイヤーに対して「難易度を選択してください」と発話し、ユーザからの応答を待つ。
 3 443 TIMER_EVENT_STOP|idle1                   MOTION_ADD|mei|aisatu|Motion\mei_adv\aisatu.vmd|PART|ONCE
-443 25 <eps>                               <eps>
-# 443 444 <eps>                   SYNTH_START|mei|mei_voice_normal|ようこそ。はじめましてでよかったでしょうか？
+#443 25 <eps>                               <eps>
+443 444 <eps>                   SYNTH_START|mei|mei_voice_normal|ようこそ。はじめましてでよかったでしょうか？
 444 4 RECOG_EVENT_STOP|はい                   SYNTH_START|mei|mei_voice_normal|わたしのなまえはメイです。みてのとおり、アンドロイドです。
 444 4 MMD_CAMERA_GET|はい                   SYNTH_START|mei|mei_voice_normal|わたしのなまえはメイです。みてのとおり、アンドロイドです。
-444 10 RECOG_EVENT_STOP|いいえ                 SYNTH_START|mei|mei_voice_normal|じゃあやるべきことはわかっていますね？カードのじゅんびはできましたか？
-444 10 MMD_CAMERA_GET|いいえ                 SYNTH_START|mei|mei_voice_normal|じゃあやるべきことはわかっていますね？カードのじゅんびはできましたか？
+444 8810 RECOG_EVENT_STOP|いいえ                 SYNTH_START|mei|mei_voice_normal|じゃあやるべきことはわかっていますね？カードのじゅんびはできましたか？
+444 8810 MMD_CAMERA_GET|いいえ                 SYNTH_START|mei|mei_voice_normal|じゃあやるべきことはわかっていますね？カードのじゅんびはできましたか？
 4 5 SYNTH_EVENT_STOP|mei                   SYNTH_START|mei|mei_voice_normal|あなたはここにとじこめられています。ここをでるにはわたしをたおすしかありません。
 5 6 SYNTH_EVENT_STOP|mei                   SYNTH_START|mei|mei_voice_normal|用意したデッキからカードを5枚引いてください。その中に攻撃カードはありますか？
 6 7 SYNTH_EVENT_STOP|mei                   <eps>
@@ -63,12 +63,11 @@
 
 9102 9103 RECOG_EVENT_STOP|ない,いいえ        SYNTH_START|mei|mei_voice_normal|せつめいはこれでおわりです。ではバトルをはじめましょう。ここをでるためにわたしをたおしてください！
 9102 9103 MMD_CAMERA_GET|いいえ        SYNTH_START|mei|mei_voice_normal|せつめいはこれでおわりです。ではバトルをはじめましょう。ここをでるためにわたしをたおしてください！
-9103 9104 <eps>                              MOTION_ADD|mei|toridasi|Motion\mei_adv\kado_toridasi.vmd|PART|ONCE
-9104 10 SYNTH_EVENT_STOP|mei                   <eps>
+9103 8810 SYNTH_EVENT_STOP|mei                   <eps>
 
-10 11 SYNTH_EVENT_STOP|mei                   SYNTH_START|mei|mei_voice_normal|ではバトルをはじめましょう。ここをでるためにわたしをたおしてください！
-
-11 21 SYNTH_EVENT_STOP|mei                   SYNTH_START|mei|mei_voice_normal|難易度を選択して。簡単、普通、難しいの中から選んでください。
+8810 8811 SYNTH_EVENT_STOP|mei                   SYNTH_START|mei|mei_voice_normal|ではバトルをはじめましょう。ここをでるためにわたしをたおしてください！
+8811 8812 SYNTH_EVENT_STOP|mei                              MOTION_ADD|mei|toridasi|Motion\mei_adv\kado_toridasi.vmd|PART|ONCE
+8812 21 <eps>                                 SYNTH_START|mei|mei_voice_normal|難易度を選択して。簡単、普通、難しいの中から選んでください。
 
 
 20   21   SYNTH_EVENT_STOP|mei                <eps>
@@ -87,6 +86,7 @@
 100 999 <eps>                              SYNTH_START|mei|mei_voice_normal|それでは勝負開始。
 999 1001  SYNTH_EVENT_STOP|mei                          <eps>
 1001 1002 <eps>                             SYNTH_START|mei|mei_voice_normal|あなたのターンです。カードを1まいひいてください
+    1002 1001 MMD_CAMERA_GET|ERROR                <eps>
 1002 1102 SYNTH_EVENT_STOP|mei                SYNTH_START|mei|mei_voice_normal|カメラを起動します。使用するカードをかざしてください。
 1102 1300 MMD_CAMERA_GET|marker              SYNTH_START|mei|mei_voice_normal|カードを読み込みました。
 1102 1331 MMD_CAMERA_GET|used                SYNTH_START|mei|mei_voice_normal|使用済みのカードです。別のカードをかざしてください。
@@ -134,12 +134,14 @@
 # mei Win
 3000 3001 <eps>                                SYNTH_START|mei|mei_voice_normal|わたしのかちです。まだまだですね。
 3001 3002 SYNTH_EVENT_STOP|mei                SYNTH_START|mei|mei_voice_normal|まだあなたはここからでることはできません。
-3002 7700 SYNTH_EVENT_STOP|mei                                <eps>
+3002 3003 SYNTH_EVENT_STOP|mei                                <eps>
+3003 7700 <eps>                                MOTION_ADD|mei|action|Motion\mei_adv\lose.vmd|PART|ONCE
 
 # mei Lose
 4000 4001 <eps>                                SYNTH_START|mei|mei_voice_normal|わたしをたおすなんてなかなかやりますね…
 4001 4002 SYNTH_EVENT_STOP|mei                 SYNTH_START|mei|mei_voice_normal|たのしいバトルでした。またバトルできることをたのしみにしています。
-4002 7700 SYNTH_EVENT_STOP|mei                                <eps>
+4002 4003 SYNTH_EVENT_STOP|mei                                <eps>
+4003 7700 <eps>                                MOTION_ADD|mei|action|Motion\mei_adv\win.vmd|PART|ONCE
 
 # 終わり（仮）
 7700 2 <eps>                                     SYNTH_START|mei|mei_voice_normal|ゲーム終了
@@ -156,7 +158,8 @@
 # mei攻撃
 600 601 <eps>                                SYNTH_START|mei|mei_voice_normal|さて、わたしのターンですね！くらえ！
 601 602 SYNTH_EVENT_STOP|mei                <eps>
-602 7000 <eps>                                <eps>
+602 603 <eps>                               MOTION_ADD|mei|action|Motion\mei_adv\syoukan.vmd|PART|ONCE
+603 7000 <eps>                                <eps>
 
 # プレイヤー防御
 300 301 <eps>                                SYNTH_START|mei|mei_voice_normal|防御します。
