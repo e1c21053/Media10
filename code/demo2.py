@@ -49,6 +49,7 @@ CRUNCHES = "crunches"
 
 SUCCESS = "成功"
 FAILURE = "失敗"
+GIVE_UP = "ギブアップします。"
 
 ACTION_ATTACK = "あなたの力をわたしに見せてください。"
 
@@ -116,7 +117,12 @@ class Card:
     def get_image(self):
         # pathはname_type_id.png
         path = f"code\\imgs\\{self.name}_{self.type}_{self.id}.png"
-        return cv2.imread(path)
+        if os.path.exists(path):
+            return cv2.imread(path)
+        else:
+            print("image not found")
+            return None
+
 
 class GameDebug():
     def __init__(self):
@@ -176,6 +182,8 @@ class GameDebug():
             self.pick_challenge()
         elif CHALLENGE in message:
             self.challenge()
+        elif GIVE_UP in message:
+            self.give_up_challenge = True
         elif "カードを読み込みました。" in message:
             print("card loaded")
             print(self.active_card.type)
@@ -263,19 +271,23 @@ class GameDebug():
             mmd().send_message(ATTACK_CARD.encode())
         elif self.active_card.type == GUARD_CARD:
             self.player.gp += self.active_card.value if self.is_cleared else self.active_card.bonusValue
-            print(f"guard: {self.active_card.value if self.is_cleared else self.active_card.bonusValue}")
+            print(
+                f"guard: {self.active_card.value if self.is_cleared else self.active_card.bonusValue}")
             mmd().send_message(GUARD_CARD.encode())
         elif self.active_card.type == HEAL_CARD:
             self.player.hp += self.active_card.value if self.is_cleared else self.active_card.bonusValue
-            print(f"heal: {self.active_card.value if self.is_cleared else self.active_card.bonusValue}")
+            print(
+                f"heal: {self.active_card.value if self.is_cleared else self.active_card.bonusValue}")
             mmd().send_message(HEAL_CARD.encode())
         elif self.active_card.type == BUFF_CARD:
             self.player.ap += self.active_card.value if self.is_cleared else self.active_card.bonusValue
-            print(f"buff: {self.active_card.value if self.is_cleared else self.active_card.bonusValue}")
+            print(
+                f"buff: {self.active_card.value if self.is_cleared else self.active_card.bonusValue}")
             mmd().send_message(BUFF_CARD.encode())
         else:
             print("Invalid card type")
         self.active_card = None
+        self.is_cleared = False
         try:
             cv2.destroyWindow('card')
         except:
@@ -399,7 +411,7 @@ class GameDebug():
             self.player.ap += ac.bonusValue
         else:
             print("Invalid card type")
-
+        self.give_up_challenge = False
         self.wait(1)
 
     def message_listener(self):
