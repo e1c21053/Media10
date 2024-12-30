@@ -1,0 +1,165 @@
+{
+    "cards": [
+        {
+            "id": 1,
+            "name": "Card 1",
+            "type": "atk",
+            "value": 0,
+            "value_range": null,
+            "bonus_value": 5,
+            "bonus_value_range": null,
+            "bonus_type": "mulcount",
+            "fixed_challenge": "exercise",
+            "path": "code\\data\\cards\\1_Advanced clear_atk.png"
+        },
+        {
+            "id": 2,
+            "name": "Card 2",
+            "type": "atk",
+            "value": 0,
+            "debuff_type": "randomharm",
+            "value_range": [
+                0,
+                50
+            ],
+            "path": "code\\data\\cards\\2_Advanced clear_atk.png"
+        },
+        {
+            "id": 3,
+            "name": "Card 3",
+            "type": "random",
+            "value": 0,
+            "bonus_value": 0,
+            "path": "code\\data\\cards\\3_Advanced clear_miracle.png"
+        },
+        {
+            "id": 4,
+            "name": "Card 4",
+            "type": "def",
+            "value": 0,
+            "value_range": null,
+            "bonus_value": 0,
+            "bonus_value_range": null,
+            "bonus_type": "invincible",
+            "path": "code\\data\\cards\\4_Beginner clear_defense.png"
+        },
+        {
+            "id": 5,
+            "name": "Card 5",
+            "type": "heal",
+            "value": 0,
+            "value_range": null,
+            "bonus_value": 0,
+            "bonus_value_range": null,
+            "bonus_type": "fullrecovery"
+        },
+        {
+            "id": 6,
+            "name": "Card 6",
+            "type": "atk",
+            "value": 50,
+            "value_range": null,
+            "bonus_value": 0,
+            "bonus_value_range": null,
+            "bonus_type": null,
+            "debuff_type": "harm",
+            "debuff_value": 30
+        },
+        {
+            "id": 7,
+            "name": "Card 7",
+            "type": "atk",
+            "value": 100,
+            "value_range": null,
+            "bonus_value": 0,
+            "bonus_value_range": null,
+            "bonus_type": null,
+            "debuff_type": "harm",
+            "debuff_value": 50
+        },
+        {
+            "id": 8,
+            "name": "Card 8",
+            "type": "atk",
+            "value": 10,
+            "value_range": null,
+            "bonus_value": 0,
+            "bonus_value_range": null,
+            "bonus_type": null
+        },
+        {
+            "id": 9,
+            "name": "Card 9",
+            "type": "atk",
+            "value": 20,
+            "value_range": null,
+            "bonus_value": 0,
+            "bonus_value_range": null,
+            "bonus_type": null
+        },
+        {
+            "id": 10,
+            "name": "Card 10",
+            "type": "atk",
+            "value": 30,
+            "value_range": null,
+            "bonus_value": 0,
+            "bonus_value_range": null,
+            "bonus_type": null
+        },
+        {
+            "id": 11,
+            "name": "Card 11",
+            "type": "atk",
+            "value": 50,
+            "value_range": null,
+            "bonus_value": 0,
+            "bonus_value_range": null,
+            "bonus_type": null
+        },
+        {
+            "id": 12,
+            "name": "Card 12",
+            "type": "buff",
+            "value": 10,
+            "value_range": null,
+            "bonus_value": 30,
+            "bonus_value_range": null,
+            "bonus_type": "value",
+            "fixed_challenge": "color"
+        },
+        {
+            "id": 13,
+            "name": "Card 13",
+            "type": "def",
+            "value": 10,
+            "value_range": null,
+            "bonus_value": 30,
+            "bonus_value_range": null,
+            "bonus_type": "value",
+            "fixed_challenge": "exercise"
+        },
+        {
+            "id": 14,
+            "name": "Card 14",
+            "type": "draw",
+            "value": 2,
+            "value_range": null,
+            "bonus_value": 3,
+            "bonus_value_range": null,
+            "bonus_type": "value",
+            "fixed_challenge": "quiz"
+        },
+        {
+            "id": 15,
+            "name": "Card 15",
+            "type": "heal",
+            "value": 20,
+            "value_range": null,
+            "bonus_value": 40,
+            "bonus_value_range": null,
+            "bonus_type": "value",
+            "fixed_challenge": "exercise"
+        }
+    ]
+}
