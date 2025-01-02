@@ -67,19 +67,19 @@ QUIZ = "quiz"
 # quiz enum
 quiz_enum = {
     "９匹のトラが乗ってそうな乗り物は？": "トラック",
-    "お財布の中に隠れている動物は?": "サイ",
-    "これenumに追加して林に木を一本追加したら何になる？": "森",
-    "29回焼いて食べるものは？": "焼肉",
-    "選ばないといけなそうな家事は？": "洗濯",
-    "はがきを食べるのが好きな赤いものは？": "ポスト",
-    "半分にすると０になる数字は？": "８(はち)",
-    "目をフライパンで焼いた食べ物は？": "目玉焼き",
-    "有るのに無い果物は？": "梨(ナシ)",
-    "空に打ち上げられる花は？": "花火(はなび)",
-    "野菜のカブを10個も食べそうな虫は？": "カブトムシ",
-    "「とけい」は何時？": "三字(さんじ)",
-    "川でウソをつく動物は？": "カワウソ",
-    "「そうめん」と言うと負けるゲームは？": "しりとり"
+    # "お財布の中に隠れている動物は?": "さい",
+    # "これenumに追加して林に木を一本追加したら何になる？": "森",
+    # "29回焼いて食べるものは？": "焼肉",
+    # "選ばないといけなそうな家事は？": "洗濯",
+    # "はがきを食べるのが好きな赤いものは？": "ポスト",
+    # "半分にすると０になる数字は？": "八",
+    # "目をフライパンで焼いた食べ物は？": "目玉焼き",
+    # "有るのに無い果物は？": "なし",
+    # "空に打ち上げられる花は？": "花火",
+    # "野菜のカブを10個も食べそうな虫は？": "カブトムシ",
+    # "「とけい」は何時？": "さんじ",
+    # "川でウソをつく動物は？": "カワウソ",
+    # "「そうめん」と言うと負けるゲームは？": "しりとり"
 }
 
 SUCCESS = "成功"
@@ -331,7 +331,7 @@ class GameDebug:
             print("win32gui not available")
 
     def handle_message(self, message):
-        self.msg_cache = message
+        self.msg_cache = message if message != "" else self.msg_cache
         if EASY in message:
             self.difficulty = EASY
         elif NORMAL in message:
@@ -349,7 +349,7 @@ class GameDebug:
         elif GIVE_UP in message:
             self.give_up_challenge = True
         elif self.mode == QUIZ:
-            if self.active_quiz is not None and message in self.active_quiz:
+            if "正解です" in message:
                 self.is_cleared = True
         elif "カードを読み込みました。" in message:
             print("card loaded")
@@ -449,13 +449,19 @@ class GameDebug:
         print("select card")
         self.wait(3)
         dict, parameters = self.get_aruco_dict_and_params()
-        if True: # debug, pick card randomly
+        if True: # debug, pick card randomly 
             while True:
+                self.active_card = self.cards[13]
+                if not self.active_card.used:
+                    print(f"selected card: {self.active_card.name}")
+                    print(f"path: {self.active_card.path}")
+                    break
                 self.active_card = np.random.choice(self.cards)
                 if not self.active_card.used:
                     print(f"selected card: {self.active_card.name}")
                     print(f"path: {self.active_card.path}")
                     break
+        # 本来はこっち
         while not self.active_card:
             ret, frame = self.cap.read()
             corners, ids, _ = aruco.detectMarkers(
@@ -663,30 +669,26 @@ class GameDebug:
             cv2.destroyWindow('color')
         except:
             pass
-    
-    def show_quiz(self):
-        quiz = self.active_quiz
-        frame = np.zeros((480, 640, 3), dtype=np.uint8)
-        frame.fill(255)
-        frame = self.draw_text(frame, quiz, (10, 30))
-        cv2.imshow('quiz', frame)
-        cv2.waitKey(1)
 
     def quiz_challenge(self):
+        # 動いてない
         self.active_quiz = np.random.choice(list(quiz_enum.keys()))
         MMD().send_message(QUIZ.encode())
+        self.wait(3)
+        self.wait(1)
+        self.wait(3)
+        MMD().send_message(quiz_enum[self.active_quiz].encode())
         print(self.active_quiz)
         while True:
-            self.show_quiz()
-            if cv2.waitKey(10) & 0xFF == ord('q') or self.give_up_challenge:
-                break
+            recv = MMD().recv_message()
+            if recv:
+                print(recv)
+                if "正解です" in recv:
+                    self.is_cleared = True
             if self.is_cleared:
                 break
-        try:
-            cv2.destroyWindow('quiz')
-        except:
-            pass
         self.active_quiz = None
+        self.wait(6)
 
     def determine_challenge_mode(self):
         mode = self.active_card.fixed_challenge

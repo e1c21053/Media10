@@ -379,18 +379,26 @@
 #1102 1110 MMD_CAMERA_GET|blue              SYNTH_START|mei|mei_voice_normal|青色
 #1102 1110 MMD_CAMERA_GET|green             SYNTH_START|mei|mei_voice_normal|緑色
 
+
+# 動いてない
 1110 1111 MMD_CAMERA_GET|成功               SYNTH_START|mei|mei_voice_normal|チャレンジせいこうです！おめでとうございます。カードのこうかがアップしました
 1111 1115 <eps>                             TEXTAREA_SET|msg_text|"チャレンジせいこうです！\nおめでとうございます。\nカードのこうかがアップしました。"
 1110 1112 MMD_CAMERA_GET|失敗               SYNTH_START|mei|mei_voice_normal|チャレンジしっぱいです…おつかれさまでした。
 1112 1115 <eps>                             TEXTAREA_SET|msg_text|"チャレンジしっぱいです・・・\nおつかれさまでした。"
 
-# quiz
-1110 2500 MMD_CAMERA_GET|quiz               SYNTH_START|mei|mei_voice_normal|クイズ表示
-2500 2501 SYNTH_EVENT_STOP|mei              <eps>
+# quiz # 動いてない
+2500 2599 SYNTH_EVENT_STOP|mei              <eps>
 2502 2503 <eps>                             SYNTH_START|mei|mei_voice_normal|正解です
-
-2501 2601 MMD_CAMERA_GET|トラック           <eps>
-2601 2502 RECOG_EVENT_STOP|トラック         <eps>
+2503 1100 <eps>                             TEXTAREA_SET|msg_text|"正解です"
+2504 1110 SYNTH_EVENT_STOP|mei              <eps>
+# 動いてない
+1110 2501 <eps>                             <eps>
+2501 2601 MMD_CAMERA_GET|トラック           SYNTH_START|mei|mei_voice_normal|９匹のトラが乗ってそうな乗り物は？
+2601 2701 <eps>                             TEXTAREA_SET|msg_text|"９匹の トラが のってそうな 乗りものは？"
+2701 2801 SYNTH_EVENT_STOP|mei              <eps>
+2801 2502 RECOG_EVENT_STOP|トラック         <eps>
+# これはデバッグ用
+2801 2502 MMD_CAMERA_GET|トラック           <eps>
 
 # ギブアップロジックは多すぎて無理
 #2601 2661 RECOG_EVENT_START|ギブアップ     SYNTH_START|mei|mei_voice_normal|ギブアップしますか？
@@ -399,20 +407,20 @@
 
 2501 2602 MMD_CAMERA_GET|森              <eps>
 2602 2502 RECOG_EVENT_STOP|森              <eps>
-2501 2603 MMD_CAMERA_GET|サイ              <eps>
-2603 2502 RECOG_EVENT_STOP|サイ              <eps>
+2501 2603 MMD_CAMERA_GET|さい              <eps>
+2603 2502 RECOG_EVENT_STOP|さい              <eps>
 2501 2604 MMD_CAMERA_GET|焼肉              <eps>
 2604 2502 RECOG_EVENT_STOP|焼肉              <eps>
 2501 2605 MMD_CAMERA_GET|洗濯              <eps>
 2605 2502 RECOG_EVENT_STOP|洗濯              <eps>
 2501 2606 MMD_CAMERA_GET|ポスト              <eps>
 2606 2502 RECOG_EVENT_STOP|ポスト              <eps>
-2501 2607 MMD_CAMERA_GET|８              <eps>
-2607 2502 RECOG_EVENT_STOP|８              <eps>
+2501 2607 MMD_CAMERA_GET|八              <eps>
+2607 2502 RECOG_EVENT_STOP|八              <eps>
 2501 2608 MMD_CAMERA_GET|目玉焼き              <eps>
 2608 2502 RECOG_EVENT_STOP|目玉焼き              <eps>
-2501 2609 MMD_CAMERA_GET|梨             <eps>
-2609 2502 RECOG_EVENT_STOP|梨             <eps>
+2501 2609 MMD_CAMERA_GET|なし             <eps>
+2609 2502 RECOG_EVENT_STOP|なし             <eps>
 2501 2610 MMD_CAMERA_GET|花火            <eps>
 2610 2502 RECOG_EVENT_STOP|花火              <eps>
 2501 2611 MMD_CAMERA_GET|カブトムシ              <eps>

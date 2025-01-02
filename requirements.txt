@@ -2,7 +2,3 @@ json
 win32gui
 win32con
 opencv-python-headless
-packaging
-pandas
-numpy
-Pillow
