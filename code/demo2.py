@@ -23,6 +23,10 @@ HARD = '難しい'
 LEVEL = '難易度'
 START = '開始'
 
+INIT_STATE = 'それではバトル開始'
+
+END_GAME = 'ゲーム終了'
+
 YOUR_TURN = 'あなたのターン'
 MEI_TURN = 'わたしのターン'
 MARKER = 'marker'
@@ -34,6 +38,7 @@ USED = 'used'
 
 
 ATTACK_CARD = 'atk'
+ADVANCED_ATTACK_CARD = 'adv_atk'  # お題付き攻撃カード
 GUARD_CARD = 'def'
 HEAL_CARD = 'heal'
 BUFF_CARD = 'buff'
@@ -44,6 +49,10 @@ card_types = [ATTACK_CARD,  GUARD_CARD, HEAL_CARD, BUFF_CARD]
 CHALLENGE = 'お題を表示します。'
 PICK_CHALLENGE = 'それではお題を抽選します。'
 CLEA_CHALLENGE = '正解です。'
+
+# ドロー通知はとりあえずこれで
+DRAW_2 = 'draw2'
+DRAW_3 = 'draw3'
 
 RED = 'red'
 GREEN = 'green'
@@ -161,7 +170,7 @@ class Card:
     ):
         self.id = id
         self.name = name
-        self.type = type if type != "random" else _ramdom_card_type()
+        self._type = type
         self._value = value
         self._value_range = value_range
         self._bonus_value = bonus_value
@@ -173,6 +182,10 @@ class Card:
         self.fixed_challenge = fixed_challenge
         self.path = path
         self.used = used
+
+    @property
+    def type(self):
+        return self._type if self._type != "random" else _ramdom_card_type()
 
     @property
     def value(self):
@@ -192,35 +205,20 @@ class Card:
     def get_image(self):
         path = self.path
         if os.path.exists(path):
-            # Load image with alpha channel if present
             image = cv2.imread(path, cv2.IMREAD_UNCHANGED)
-            if image is None:
-                print(f"Failed to load image at {path}")
-                return None
-            if image.shape[2] == 4:
-                # Convert BGRA to BGR
-                image = cv2.cvtColor(image, cv2.COLOR_BGRA2BGR)
-                print(f"Converted image with alpha channel to BGR for {path}")
-            else:
-                print(f"Loaded image in BGR format from {path}")
-            return self.resize_image_preserve_aspect(image, 200, 200)
-        print(f"Image not found at path: {path}")
-        return None
+            image = self.resize_image_preserve_aspect(image, 400, 400)
+            return image
 
     def resize_image_preserve_aspect(self, image, max_width, max_height):
         h, w = image.shape[:2]
-        ratio = min(max_width / w, max_height / h)
-        new_w = int(w * ratio)
-        new_h = int(h * ratio)
-        if image.shape[2] == 3:  # add alpha channel if needed
-            image = cv2.cvtColor(image, cv2.COLOR_BGR2BGRA)
-        resized = cv2.resize(image, (new_w, new_h),
-                             interpolation=cv2.INTER_AREA)
-        bg = np.zeros((max_height, max_width, 4), dtype=np.uint8)
-        yoff = (max_height - new_h) // 2
-        xoff = (max_width - new_w) // 2
-        bg[yoff:yoff+new_h, xoff:xoff+new_w] = resized
-        return bg
+        aspect = w / h
+        if w > max_width:
+            w = max_width
+            h = int(w / aspect)
+        if h > max_height:
+            h = max_height
+            w = int(h * aspect)
+        return cv2.resize(image, (w, h), interpolation=cv2.INTER_AREA)
 
 
 class GameDebug:
@@ -231,12 +229,14 @@ class GameDebug:
         self._player = Status(100, 0)
         self.mode = None
         self.is_cleared = False
+        self.active_quiz = None
         self.cap: cv2.VideoCapture = cv2.VideoCapture(0)
         self.cards: list[Card] = []
         self.active_card: Card = None
         self._lock = threading.Lock()
         self.give_up_challenge = False
-        self.meg_cache = ""
+        self.msg_cache = ""
+        self.is_end = False
         self.load_cards()
 
     def load_cards(self):
@@ -273,6 +273,11 @@ class GameDebug:
         try:
             import win32gui
             import win32con
+            from win32api import GetSystemMetrics
+
+            screen_width = GetSystemMetrics(0)
+            screen_height = GetSystemMetrics(1)
+
             mmda_hwnd = win32gui.FindWindow(
                 None, 'MMDAgent - Toolkit for building voice interaction systems')
             if mmda_hwnd:
@@ -280,42 +285,53 @@ class GameDebug:
                 mmda_x, mmda_y, mmda_right, mmda_bottom = mmda_rect
                 mmda_width = mmda_right - mmda_x
                 offset = 10
-                window_width = 400
-                window_height = 150
-                windows = ['Status', 'quiz', 'color', 'exercise', 'card', 'QR']
+                windows = ['Status', 'cards', 'quiz', 'color', 'exercise', 'QR']
                 for i, window_name in enumerate(windows):
                     hwnd = win32gui.FindWindow(None, window_name)
                     if hwnd:
+                        window_rect = win32gui.GetWindowRect(hwnd)
+                        window_width = window_rect[2] - window_rect[0]
+                        window_height = window_rect[3] - window_rect[1]
+                        new_x = mmda_x + mmda_width + offset + (i * (window_width + offset))
+                        new_y = mmda_y
+                        if new_x + window_width > screen_width:
+                            new_x = screen_width - window_width
+                        if new_y + window_height > screen_height:
+                            new_y = screen_height - window_height
                         win32gui.SetWindowPos(
                             hwnd,
                             win32con.HWND_TOP,
-                            mmda_x + mmda_width + offset +
-                            (i * (window_width + offset)),
-                            mmda_y,
+                            new_x,
+                            new_y,
                             window_width,
                             window_height,
-                            0
+                            win32con.SWP_NOZORDER | win32con.SWP_NOACTIVATE
                         )
             else:
-                windows = ['Status', 'quiz', 'color', 'exercise', 'card', 'QR']
+                windows = ['Status', 'cards', 'quiz', 'color', 'exercise', 'QR']
                 for i, window_name in enumerate(windows):
                     hwnd = win32gui.FindWindow(None, window_name)
                     if hwnd:
+                        new_x = 0 + (i * 410)
+                        new_y = 0
+                        if new_x + 400 > screen_width:
+                            new_x = screen_width - 400
+                        if new_y + 150 > screen_height:
+                            new_y = screen_height - 150
                         win32gui.SetWindowPos(
                             hwnd,
                             win32con.HWND_TOP,
-                            0 + (i * 410),
-                            0,
+                            new_x,
+                            new_y,
                             400,
                             150,
-                            0
+                            win32con.SWP_NOZORDER | win32con.SWP_NOACTIVATE
                         )
         except ImportError:
             print("win32gui not available")
 
     def handle_message(self, message):
-        self.meg_cache = message
-        self.update_window_area()
+        self.msg_cache = message
         if EASY in message:
             self.difficulty = EASY
         elif NORMAL in message:
@@ -332,6 +348,9 @@ class GameDebug:
             self.challenge()
         elif GIVE_UP in message:
             self.give_up_challenge = True
+        elif self.mode == QUIZ:
+            if self.active_quiz is not None and message in self.active_quiz:
+                self.is_cleared = True
         elif "カードを読み込みました。" in message:
             print("card loaded")
             print(self.active_card.type)
@@ -339,13 +358,25 @@ class GameDebug:
             self.invoke_card()
         elif CHECK_WIN in message:
             self.check_win()
+        elif INIT_STATE in message:
+            self.player = Status(100, 0)
+            self.mei = Status(100, 0)
+        elif END_GAME in message:
+            print("end game")
+            try:
+                # fstでMMDAgentを終了させられるならいらない
+                os.system("taskkill /f /im MMDAgent.exe")
+            except Exception as e:
+                print(e)
+            self.is_end = True
+
+
 
     def draw_text(self, img, text, pos=(10, 30), font_path=r"code\NotoSerifJP[wght].ttf", font_size=24):
-        # Convert to PIL Image
         pil_img = Image.fromarray(img)
         draw = ImageDraw.Draw(pil_img)
         font = ImageFont.truetype(font_path, font_size)
-        draw.text(pos, text, font=font, fill=(255, 255, 255))
+        draw.text(pos, text, font=font, fill=(0, 0, 0))
         return np.array(pil_img)
 
     def draw_hp_bar(self, img, hp, max_hp=100, pos=(10, 40), size=(200, 10), color=(0, 255, 0)):
@@ -361,48 +392,50 @@ class GameDebug:
         return np.array(pil_img)
 
     def show_player_status(self):
-        status_img = np.zeros((720, 500, 3), dtype=np.uint8)
+        status_img = np.zeros((420, 400, 3), dtype=np.uint8)
+        status_img.fill(255)
 
         status_img = self.draw_text(status_img, "プレイヤー", (10, 10))
 
         status_img = self.draw_hp_bar(status_img, self.player.hp)
 
         status_img = self.draw_text(
-            status_img, f"こうげき:{self.player.ap}", (10, 60))
+            status_img, f"HP:{self.player.hp}", (10, 60))
         status_img = self.draw_text(
-            status_img, f"ぼうぎょ:{self.player.gp}", (10, 90))
+            status_img, f"こうげき:{self.player.ap}", (10, 90))
+        status_img = self.draw_text(
+            status_img, f"ぼうぎょ:{self.player.gp}", (10, 120))
 
-        status_img = self.draw_text(status_img, "メイ", (10, 110))
+        status_img = self.draw_text(status_img, "メイ", (10, 170))
 
-        status_img = self.draw_hp_bar(status_img, self.mei.hp, pos=(10, 140))
+        status_img = self.draw_hp_bar(status_img, self.mei.hp, pos=(10, 200))
 
         status_img = self.draw_text(
-            status_img, f"こうげき:{self.mei.ap}", (10, 160))
+            status_img, f"HP:{self.mei.hp}", (10, 220))
         status_img = self.draw_text(
-            status_img, f"ぼうぎょ:{self.mei.gp}", (10, 190))
+            status_img, f"こうげき:{self.mei.ap}", (10, 250))
+        status_img = self.draw_text(
+            status_img, f"ぼうぎょ:{self.mei.gp}", (10, 280))
         cv2.imshow('Status', status_img)
         cv2.waitKey(1)
 
-    def delete_status(self):
-        try:
-            cv2.destroyWindow('Status')
-        except:
-            pass
-
-    def end_game(self):
-        if self.mei.hp <= 0:
-            print("You win")
-            return True
-        elif self.player.hp <= 0:
-            print("You lose")
-            return True
-        return False
-
+    def show_active_card(self):
+        if self.active_card is not None:
+            card_img = self.active_card.get_image()
+            if card_img is not None:
+                cv2.startWindowThread()
+                cv2.imshow('cards', card_img)
+                cv2.waitKey(1)
+        # else:
+        #     cv2.imshow('cards', np.zeros((400, 400, 3), dtype=np.uint8))
+        #     cv2.waitKey(1)
+        
     def player_turn(self):
         print("player turn")
         print(f"player : {self.player.__str__()}, mei : {self.mei.__str__()}")
         self.show_player_status()
         self.select_card()
+        self.show_active_card()
         self.wait(2)
         MMD().send_message(MARKER.encode())
         self.wait(4)
@@ -416,6 +449,13 @@ class GameDebug:
         print("select card")
         self.wait(3)
         dict, parameters = self.get_aruco_dict_and_params()
+        if True: # debug, pick card randomly
+            while True:
+                self.active_card = np.random.choice(self.cards)
+                if not self.active_card.used:
+                    print(f"selected card: {self.active_card.name}")
+                    print(f"path: {self.active_card.path}")
+                    break
         while not self.active_card:
             ret, frame = self.cap.read()
             corners, ids, _ = aruco.detectMarkers(
@@ -428,6 +468,9 @@ class GameDebug:
                     if card_id < len(self.cards):
                         if not self.cards[card_id].used:
                             self.active_card = self.cards[card_id]
+                            # ランダムカードだった場合
+                            if self.active_card.type == "random":
+                                self.active_card.type = _ramdom_card_type()
                             break
                         else:
                             print("card already used")
@@ -441,18 +484,8 @@ class GameDebug:
             cv2.destroyWindow('QR')
         except:
             pass
+
         self.active_card.set_used(True)
-        card_img = self.active_card.get_image()
-        if card_img is not None:
-            print(
-                f"Displaying card image for {self.active_card.name} with shape {card_img.shape}")
-            cv2.imshow('card', card_img)
-            cv2.waitKey(1)
-            self.update_window_area()
-            if card_img.size == 0:
-                print("Loaded card image is empty.")
-        else:
-            print("No image to display for the selected card.")
         print(f"selected card: {self.active_card.name}")
 
     def get_aruco_dict_and_params(self):
@@ -472,7 +505,7 @@ class GameDebug:
 
         card_type = self.active_card.type
         base_val = 0
-        if card_type == ATTACK_CARD:
+        if card_type == ATTACK_CARD or card_type == ADVANCED_ATTACK_CARD:
             base_val = self.player.ap + self.active_card.value
             mmd_msg = ATTACK_CARD
         elif card_type == GUARD_CARD:
@@ -511,7 +544,7 @@ class GameDebug:
                 print("Invincible guard")
 
         # apply effect
-        if card_type == ATTACK_CARD:
+        if card_type == ATTACK_CARD or card_type == ADVANCED_ATTACK_CARD:
             self.mei.hp = max(self.mei.hp - base_val, 0)
         elif card_type == GUARD_CARD:
             self.player.gp = max(base_val, 0)
@@ -520,8 +553,15 @@ class GameDebug:
         elif card_type == BUFF_CARD:
             self.player.ap = base_val
         elif card_type == DRAW_CARD:
-            # TODO ここでbase_val毎引くことをsend_messageで通知する
-            pass
+            if base_val == DRAW_2:
+                print("draw 2 cards")
+                MMD().send_message(DRAW_2.encode())
+            elif base_val == DRAW_3:
+                print("draw 3 cards")
+                MMD().send_message(DRAW_3.encode())
+            else:
+                print("Invalid draw value")
+
 
         # apply debuff
         if self.active_card.debuff_type == "harm":
@@ -536,6 +576,7 @@ class GameDebug:
         self.active_card = None
         self.is_cleared = False
         try:
+            cv2.waitKey(1)
             cv2.destroyWindow('card')
         except:
             pass
@@ -547,11 +588,11 @@ class GameDebug:
         if self.mei.hp <= 0:
             print("プレイヤーの勝利")
             MMD().send_message(WIN.encode())
-            self.delete_status()
+            # self.delete_status()
         elif self.player.hp <= 0:
             print("メイの勝利")
             MMD().send_message(LOSE.encode())
-            self.delete_status()
+            # self.delete_status()
         else:
             print("続行")
             MMD().send_message(CONTINUE.encode())
@@ -568,6 +609,7 @@ class GameDebug:
         self.wait(1)
         dmg = get_random_dmg(mei_damage_table[self.difficulty])
         self.player.hp -= dmg + self.player.gp
+        self.show_player_status()
         print(f"メイの攻撃: {dmg}のダメージ")
 
     def is_exercise_cleared(self, recognizer: exercise.ExerciseRecognizer):
@@ -594,19 +636,21 @@ class GameDebug:
         init_frame_color = None
         previous_detected = None
         start_time = None
+        col = self.mode
         while True:
             ret, frame = self.cap.read()
             if not ret:
                 break
-            if init_frame_color is None:
-                init_frame_color = recognizer.recognize_color(frame)
-                col = np.random.choice(
-                    [c for c in [RED, GREEN, BLUE] if c != init_frame_color])
+            # if init_frame_color is None:
+            #     init_frame_color = recognizer.recognize_color(frame)
+            #     col = np.random.choice(
+            #         [c for c in [RED, GREEN, BLUE] if c != init_frame_color])
             is_detected = recognizer.recognize_specific_color(frame, col)
             if is_detected == previous_detected:
                 if start_time is None:
                     start_time = time.time()
                 elif time.time() - start_time > 5:
+                    self.is_cleared = True
                     print(f"{col} recognized for more than 5 seconds.")
                     break
             else:
@@ -619,15 +663,21 @@ class GameDebug:
             cv2.destroyWindow('color')
         except:
             pass
+    
+    def show_quiz(self):
+        quiz = self.active_quiz
+        frame = np.zeros((480, 640, 3), dtype=np.uint8)
+        frame.fill(255)
+        frame = self.draw_text(frame, quiz, (10, 30))
+        cv2.imshow('quiz', frame)
+        cv2.waitKey(1)
 
     def quiz_challenge(self):
-        quiz = np.random.choice(list(quiz_enum.keys()))
+        self.active_quiz = np.random.choice(list(quiz_enum.keys()))
         MMD().send_message(QUIZ.encode())
-        print(quiz)
+        print(self.active_quiz)
         while True:
-            ret, frame = self.cap.read()
-            frame = self.draw_text(frame, quiz, (10, 30))
-            cv2.imshow('quiz', frame)
+            self.show_quiz()
             if cv2.waitKey(10) & 0xFF == ord('q') or self.give_up_challenge:
                 break
             if self.is_cleared:
@@ -636,22 +686,31 @@ class GameDebug:
             cv2.destroyWindow('quiz')
         except:
             pass
+        self.active_quiz = None
 
     def determine_challenge_mode(self):
         mode = self.active_card.fixed_challenge
-        if mode == "color":
+        if any([mode == c for c in [RED, GREEN, BLUE, PUSH_UPS, SQUATS, CRUNCHES]]):
+            pass
+        elif mode == "color":
             mode = np.random.choice([RED, GREEN, BLUE])
         elif mode == "exercise":
             mode = np.random.choice([PUSH_UPS, SQUATS, CRUNCHES])
         elif mode == "quiz":
             mode = QUIZ
+        elif mode == "random":
+            mode = np.random.choice(
+                [RED, GREEN, BLUE, PUSH_UPS, SQUATS, CRUNCHES, QUIZ])
+        else:
+            print("Invalid challenge mode")
+            mode = None
         return mode
 
     def pick_challenge(self):
         print("pick challenge")
         self.wait(1)
         mode = self.determine_challenge_mode()
-        self.wait(1)
+        self.wait(4)
         MMD().send_message(mode.encode())
         print(f"challenge: {mode}")
         self.mode = mode
@@ -695,11 +754,33 @@ class GameDebug:
                 print(message)
                 self.handle_message(message)
 
+    def update_windows(self):
+        while True:
+            cv2.waitKey(1)
+            try:
+                if self.player and self.mei:
+                    self.show_player_status()
+                # if self.active_card is not None:
+                self.show_active_card()
+                # else:
+                #     try:
+                #         cv2.destroyWindow('cards')
+                #     except:
+                #         pass
+                self.update_window_area()
+            except Exception as e:
+                print(e)
+
     def run(self):
         listener_thread = threading.Thread(target=self.message_listener)
         listener_thread.daemon = True
         listener_thread.start()
-        while not self.end_game():
+
+        window_thread = threading.Thread(target=self.update_windows)
+        window_thread.daemon = True
+        window_thread.start()
+
+        while not self.is_end:
             ret, frame = self.cap.read()
             if cv2.waitKey(1) & 0xFF == ord('q'):
                 break
