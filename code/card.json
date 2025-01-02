@@ -3,14 +3,14 @@
         {
             "id": 1,
             "name": "Card 1",
-            "type": "atk",
+            "type": "adv_atk",
             "value": 0,
             "value_range": null,
             "bonus_value": 5,
             "bonus_value_range": null,
             "bonus_type": "mulcount",
-            "fixed_challenge": "exercise",
-            "path": "code\\data\\cards\\1_Advanced clear_atk.png"
+            "fixed_challenge": "crunches",
+            "path": "code\\data\\cards\\1_Advanced clear_atk.jpg"
         },
         {
             "id": 2,
@@ -22,15 +22,20 @@
                 0,
                 50
             ],
-            "path": "code\\data\\cards\\2_Advanced clear_atk.png"
+            "path": "code\\data\\cards\\2_Advanced clear_atk.jpg"
         },
         {
             "id": 3,
             "name": "Card 3",
             "type": "random",
             "value": 0,
+            "value_range": [
+                0,
+                50
+            ],
             "bonus_value": 0,
-            "path": "code\\data\\cards\\3_Advanced clear_miracle.png"
+            "fixed_challenge": "random",
+            "path": "code\\data\\cards\\3_Advanced clear_miracle.jpg"
         },
         {
             "id": 4,
@@ -41,7 +46,8 @@
             "bonus_value": 0,
             "bonus_value_range": null,
             "bonus_type": "invincible",
-            "path": "code\\data\\cards\\4_Beginner clear_defense.png"
+            "fixed_challenge": "random",
+            "path": "code\\data\\cards\\4_Beginner clear_defense.jpg"
         },
         {
             "id": 5,
@@ -51,7 +57,9 @@
             "value_range": null,
             "bonus_value": 0,
             "bonus_value_range": null,
-            "bonus_type": "fullrecovery"
+            "bonus_type": "fullrecovery",
+            "fixed_challenge": "random",
+            "path": "code\\data\\cards\\5_Beginner clear_recovery.jpg"
         },
         {
             "id": 6,
@@ -63,7 +71,8 @@
             "bonus_value_range": null,
             "bonus_type": null,
             "debuff_type": "harm",
-            "debuff_value": 30
+            "debuff_value": 30,
+            "path": "code\\data\\cards\\6_Intermediate clear_additional attack.jpg"
         },
         {
             "id": 7,
@@ -71,11 +80,9 @@
             "type": "atk",
             "value": 100,
             "value_range": null,
-            "bonus_value": 0,
-            "bonus_value_range": null,
-            "bonus_type": null,
             "debuff_type": "harm",
-            "debuff_value": 50
+            "debuff_value": 50,
+            "path": "code\\data\\cards\\7_Intermediate clear_attack.jpg"
         },
         {
             "id": 8,
@@ -83,9 +90,7 @@
             "type": "atk",
             "value": 10,
             "value_range": null,
-            "bonus_value": 0,
-            "bonus_value_range": null,
-            "bonus_type": null
+            "path": "code\\data\\cards\\8_basic_10.jpg"
         },
         {
             "id": 9,
@@ -93,9 +98,7 @@
             "type": "atk",
             "value": 20,
             "value_range": null,
-            "bonus_value": 0,
-            "bonus_value_range": null,
-            "bonus_type": null
+            "path": "code\\data\\cards\\9_basic_20.jpg"
         },
         {
             "id": 10,
@@ -103,9 +106,7 @@
             "type": "atk",
             "value": 30,
             "value_range": null,
-            "bonus_value": 0,
-            "bonus_value_range": null,
-            "bonus_type": null
+            "path": "code\\data\\cards\\10_basic_30.jpg"
         },
         {
             "id": 11,
@@ -113,9 +114,7 @@
             "type": "atk",
             "value": 50,
             "value_range": null,
-            "bonus_value": 0,
-            "bonus_value_range": null,
-            "bonus_type": null
+            "path": "code\\data\\cards\\11_basic_50.jpg"
         },
         {
             "id": 12,
@@ -126,7 +125,8 @@
             "bonus_value": 30,
             "bonus_value_range": null,
             "bonus_type": "value",
-            "fixed_challenge": "color"
+            "fixed_challenge": "color",
+            "path": "code\\data\\cards\\12_special_attack.jpg"
         },
         {
             "id": 13,
@@ -137,7 +137,8 @@
             "bonus_value": 30,
             "bonus_value_range": null,
             "bonus_type": "value",
-            "fixed_challenge": "exercise"
+            "fixed_challenge": "exercise",
+            "path": "code\\data\\cards\\13_special_defense.jpg"
         },
         {
             "id": 14,
@@ -148,7 +149,8 @@
             "bonus_value": 3,
             "bonus_value_range": null,
             "bonus_type": "value",
-            "fixed_challenge": "quiz"
+            "fixed_challenge": "quiz",
+            "path": "code\\data\\cards\\14_special_draw.jpg"
         },
         {
             "id": 15,
@@ -159,7 +161,8 @@
             "bonus_value": 40,
             "bonus_value_range": null,
             "bonus_type": "value",
-            "fixed_challenge": "exercise"
+            "fixed_challenge": "exercise",
+            "path": "code\\data\\cards\\15_special_recovery.jpg"
         }
     ]
 }
