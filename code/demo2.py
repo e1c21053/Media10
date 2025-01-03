@@ -67,19 +67,19 @@ QUIZ = "quiz"
 # quiz enum
 quiz_enum = {
     "９匹のトラが乗ってそうな乗り物は？": "トラック",
-    # "お財布の中に隠れている動物は?": "さい",
-    # "これenumに追加して林に木を一本追加したら何になる？": "森",
-    # "29回焼いて食べるものは？": "焼肉",
-    # "選ばないといけなそうな家事は？": "洗濯",
-    # "はがきを食べるのが好きな赤いものは？": "ポスト",
-    # "半分にすると０になる数字は？": "八",
-    # "目をフライパンで焼いた食べ物は？": "目玉焼き",
-    # "有るのに無い果物は？": "なし",
-    # "空に打ち上げられる花は？": "花火",
-    # "野菜のカブを10個も食べそうな虫は？": "カブトムシ",
-    # "「とけい」は何時？": "さんじ",
-    # "川でウソをつく動物は？": "カワウソ",
-    # "「そうめん」と言うと負けるゲームは？": "しりとり"
+    "お財布の中に隠れている動物は?": "さい",
+    "林に木を一本追加したら何になる？": "森",
+    "29回焼いて食べるものは？": "焼肉",
+    "選ばないといけなそうな家事は？": "洗濯",
+    "はがきを食べるのが好きな赤いものは？": "ポスト",
+    "半分にすると０になる数字は？": "八",
+    "目をフライパンで焼いた食べ物は？": "目玉焼き",
+    "有るのに無い果物は？": "なし",
+    "空に打ち上げられる花は？": "花火",
+    "野菜のカブを10個も食べそうな虫は？": "カブトムシ",
+    "「とけい」は何時？": "さんじ",
+    "川でウソをつく動物は？": "カワウソ",
+    "「そうめん」と言うと負けるゲームは？": "しりとり"
 }
 
 SUCCESS = "成功"
@@ -348,14 +348,14 @@ class GameDebug:
             self.challenge()
         elif GIVE_UP in message:
             self.give_up_challenge = True
+        elif INVOKE in message:
+            self.invoke_card()
         elif self.mode == QUIZ:
             if "正解です" in message:
                 self.is_cleared = True
         elif "カードを読み込みました。" in message:
             print("card loaded")
             print(self.active_card.type)
-        elif INVOKE in message:
-            self.invoke_card()
         elif CHECK_WIN in message:
             self.check_win()
         elif INIT_STATE in message:
@@ -451,11 +451,11 @@ class GameDebug:
         dict, parameters = self.get_aruco_dict_and_params()
         if True: # debug, pick card randomly 
             while True:
-                self.active_card = self.cards[13]
-                if not self.active_card.used:
-                    print(f"selected card: {self.active_card.name}")
-                    print(f"path: {self.active_card.path}")
-                    break
+                # self.active_card = self.cards[13] #クイズカード
+                # if not self.active_card.used:
+                #     print(f"selected card: {self.active_card.name}")
+                #     print(f"path: {self.active_card.path}")
+                #     break
                 self.active_card = np.random.choice(self.cards)
                 if not self.active_card.used:
                     print(f"selected card: {self.active_card.name}")
@@ -625,6 +625,7 @@ class GameDebug:
 
     def exercise_challenge(self):
         recognizer = exercise.ExerciseRecognizer()
+        recognizer.debug_mode = True
         while True:
             ret, frame = self.cap.read()
             frame = recognizer.recognize_exercise(frame, self.mode)
@@ -671,7 +672,6 @@ class GameDebug:
             pass
 
     def quiz_challenge(self):
-        # 動いてない
         self.active_quiz = np.random.choice(list(quiz_enum.keys()))
         MMD().send_message(QUIZ.encode())
         self.wait(3)
@@ -688,18 +688,17 @@ class GameDebug:
             if self.is_cleared:
                 break
         self.active_quiz = None
-        self.wait(6)
+        print("quiz cleared")
+        # self.wait(6)
 
     def determine_challenge_mode(self):
         mode = self.active_card.fixed_challenge
-        if any([mode == c for c in [RED, GREEN, BLUE, PUSH_UPS, SQUATS, CRUNCHES]]):
+        if any([mode == c for c in [RED, GREEN, BLUE, PUSH_UPS, SQUATS, CRUNCHES,QUIZ]]):
             pass
         elif mode == "color":
             mode = np.random.choice([RED, GREEN, BLUE])
         elif mode == "exercise":
             mode = np.random.choice([PUSH_UPS, SQUATS, CRUNCHES])
-        elif mode == "quiz":
-            mode = QUIZ
         elif mode == "random":
             mode = np.random.choice(
                 [RED, GREEN, BLUE, PUSH_UPS, SQUATS, CRUNCHES, QUIZ])
@@ -731,7 +730,7 @@ class GameDebug:
         else:
             print("失敗！")
             MMD().send_message(FAILURE.encode())
-        self.update_status_after_challenge()
+        # self.update_status_after_challenge()
         self.give_up_challenge = False
         self.wait(1)
 
@@ -753,7 +752,7 @@ class GameDebug:
         while True:
             message = mmd_agent.recv_message()
             if message:
-                print(message)
+                print(f"received:\t{message}")
                 self.handle_message(message)
 
     def update_windows(self):
