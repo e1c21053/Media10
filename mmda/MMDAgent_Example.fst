@@ -372,28 +372,18 @@
 # お題待機
 1100 1101 SYNTH_EVENT_STOP|mei              SYNTH_START|mei|mei_voice_normal|お題を表示します。
 1101 1110 SYNTH_EVENT_STOP|mei              <eps>
-#1102 1110 MMD_CAMERA_GET|push_ups          SYNTH_START|mei|mei_voice_normal|腕立て伏せ
-#1102 1110 MMD_CAMERA_GET|squats            SYNTH_START|mei|mei_voice_normal|スクワット
-#1102 1110 MMD_CAMERA_GET|crunches          SYNTH_START|mei|mei_voice_normal|腹筋
-#1102 1110 MMD_CAMERA_GET|red               SYNTH_START|mei|mei_voice_normal|赤色
-#1102 1110 MMD_CAMERA_GET|blue              SYNTH_START|mei|mei_voice_normal|青色
-#1102 1110 MMD_CAMERA_GET|green             SYNTH_START|mei|mei_voice_normal|緑色
 
+1110 1111 MMD_CAMERA_GET|成功               <eps>
+1111 1112 <eps>                            SYNTH_START|mei|mei_voice_normal|チャレンジせいこうです！おめでとうございます。カードのこうかがアップしました
+1112 1115 <eps>                             TEXTAREA_SET|msg_text|"チャレンジせいこうです！\nおめでとうございます。\nカードのこうかがアップしました。"
+1110 1122 MMD_CAMERA_GET|失敗               SYNTH_START|mei|mei_voice_normal|チャレンジしっぱいです…おつかれさまでした。
+1122 1115 <eps>                             TEXTAREA_SET|msg_text|"チャレンジしっぱいです・・・\nおつかれさまでした。"
 
-# 動いてない
-1110 1111 MMD_CAMERA_GET|成功               SYNTH_START|mei|mei_voice_normal|チャレンジせいこうです！おめでとうございます。カードのこうかがアップしました
-1111 1115 <eps>                             TEXTAREA_SET|msg_text|"チャレンジせいこうです！\nおめでとうございます。\nカードのこうかがアップしました。"
-1110 1112 MMD_CAMERA_GET|失敗               SYNTH_START|mei|mei_voice_normal|チャレンジしっぱいです…おつかれさまでした。
-1112 1115 <eps>                             TEXTAREA_SET|msg_text|"チャレンジしっぱいです・・・\nおつかれさまでした。"
-
-# quiz # 動いてない
-2500 2599 SYNTH_EVENT_STOP|mei              <eps>
 2502 2503 <eps>                             SYNTH_START|mei|mei_voice_normal|正解です
-2503 1100 <eps>                             TEXTAREA_SET|msg_text|"正解です"
-2504 1110 SYNTH_EVENT_STOP|mei              <eps>
-# 動いてない
-1110 2501 <eps>                             <eps>
-2501 2601 MMD_CAMERA_GET|トラック           SYNTH_START|mei|mei_voice_normal|９匹のトラが乗ってそうな乗り物は？
+2503 2504 <eps>                             TEXTAREA_SET|msg_text|"正解です"
+2504 1111 SYNTH_EVENT_STOP|mei              <eps>
+
+1110 2601 MMD_CAMERA_GET|トラック           SYNTH_START|mei|mei_voice_normal|９匹のトラが乗ってそうな乗り物は？
 2601 2701 <eps>                             TEXTAREA_SET|msg_text|"９匹の トラが のってそうな 乗りものは？"
 2701 2801 SYNTH_EVENT_STOP|mei              <eps>
 2801 2502 RECOG_EVENT_STOP|トラック         <eps>
@@ -401,36 +391,92 @@
 2801 2502 MMD_CAMERA_GET|トラック           <eps>
 
 # ギブアップロジックは多すぎて無理
-#2601 2661 RECOG_EVENT_START|ギブアップ     SYNTH_START|mei|mei_voice_normal|ギブアップしますか？
+#2801 2661 RECOG_EVENT_START|ギブアップ     SYNTH_START|mei|mei_voice_normal|ギブアップしますか？
 #2661 2601 RECOG_EVENT_STOP|はい             SYNTH_START|mei|mei_voice_normal|チャレンジしっぱいです…おつかれさまでした。
 #2661 2614 RECOG_EVENT_STOP|いいえ           SYNTH_START|mei|mei_voice_normal|では、引き続きがんばってください！
 
-2501 2602 MMD_CAMERA_GET|森              <eps>
-2602 2502 RECOG_EVENT_STOP|森              <eps>
-2501 2603 MMD_CAMERA_GET|さい              <eps>
-2603 2502 RECOG_EVENT_STOP|さい              <eps>
-2501 2604 MMD_CAMERA_GET|焼肉              <eps>
-2604 2502 RECOG_EVENT_STOP|焼肉              <eps>
-2501 2605 MMD_CAMERA_GET|洗濯              <eps>
-2605 2502 RECOG_EVENT_STOP|洗濯              <eps>
-2501 2606 MMD_CAMERA_GET|ポスト              <eps>
-2606 2502 RECOG_EVENT_STOP|ポスト              <eps>
-2501 2607 MMD_CAMERA_GET|八              <eps>
-2607 2502 RECOG_EVENT_STOP|八              <eps>
-2501 2608 MMD_CAMERA_GET|目玉焼き              <eps>
-2608 2502 RECOG_EVENT_STOP|目玉焼き              <eps>
-2501 2609 MMD_CAMERA_GET|なし             <eps>
-2609 2502 RECOG_EVENT_STOP|なし             <eps>
-2501 2610 MMD_CAMERA_GET|花火            <eps>
-2610 2502 RECOG_EVENT_STOP|花火              <eps>
-2501 2611 MMD_CAMERA_GET|カブトムシ              <eps>
-2611 2502 RECOG_EVENT_STOP|カブトムシ              <eps>
-2501 2612 MMD_CAMERA_GET|三字              <eps>
-2612 2502 RECOG_EVENT_STOP|三字             <eps>
-2501 2613 MMD_CAMERA_GET|カワウソ              <eps>
-2613 2502 RECOG_EVENT_STOP|カワウソ              <eps>
-2501 2614 MMD_CAMERA_GET|しりとり              <eps>
-2614 2502 RECOG_EVENT_STOP|しりとり              <eps>
+1110 2602 MMD_CAMERA_GET|森                 SYNTH_START|mei|mei_voice_normal|林に木を一本追加したら何になる？
+2602 2702 <eps>                             TEXTAREA_SET|msg_text|"はやしに きを いっぽん ついかしたら\nなにに なる？"
+2702 2802 SYNTH_EVENT_STOP|mei              <eps>
+2802 2502 RECOG_EVENT_STOP|森               <eps>
+2802 2502 MMD_CAMERA_GET|森                 <eps>
+
+1110 2603 MMD_CAMERA_GET|さい              SYNTH_START|mei|mei_voice_normal|お財布の中に隠れている動物は?
+2603 2703 <eps>                             TEXTAREA_SET|msg_text|"おさいふの なかに かくれている どうぶつは？"
+2703 2803 SYNTH_EVENT_STOP|mei              <eps>
+2803 2502 RECOG_EVENT_STOP|さい             <eps>
+2803 2502 MMD_CAMERA_GET|さい               <eps>
+
+1110 2604 MMD_CAMERA_GET|焼肉              SYNTH_START|mei|mei_voice_normal|29回焼いて食べるものは？
+2604 2704 <eps>                             TEXTAREA_SET|msg_text|"29かい やいて たべるものは？"
+2704 2804 SYNTH_EVENT_STOP|mei              <eps>
+2804 2502 RECOG_EVENT_STOP|焼肉             <eps>
+2804 2502 MMD_CAMERA_GET|焼肉               <eps>
+
+1110 2605 MMD_CAMERA_GET|洗濯              SYNTH_START|mei|mei_voice_normal|選ばないといけなそうな家事は？
+2605 2705 <eps>                             TEXTAREA_SET|msg_text|"えらばないと いけなそうな かじは？"
+2705 2805 SYNTH_EVENT_STOP|mei              <eps>
+2805 2502 RECOG_EVENT_STOP|洗濯             <eps>
+2805 2502 MMD_CAMERA_GET|洗濯               <eps>
+
+1110 2606 MMD_CAMERA_GET|ポスト              SYNTH_START|mei|mei_voice_normal|はがきを食べるのが好きな赤いものは？
+2606 2706 <eps>                             TEXTAREA_SET|msg_text|"はがきを たべるのが すきな あかいものは？"
+2706 2806 SYNTH_EVENT_STOP|mei              <eps>
+2806 2502 RECOG_EVENT_STOP|ポスト              <eps>
+2806 2502 MMD_CAMERA_GET|ポスト              <eps>
+
+1110 2607 MMD_CAMERA_GET|八              SYNTH_START|mei|mei_voice_normal|半分にすると０になる数字は？
+2607 2707 <eps>                             TEXTAREA_SET|msg_text|"はんぶんにすると ０になる すうじは？"
+2707 2807 SYNTH_EVENT_STOP|mei              <eps>
+2807 2502 RECOG_EVENT_STOP|八              <eps>
+2807 2502 MMD_CAMERA_GET|八               <eps>
+
+
+1110 2608 MMD_CAMERA_GET|目玉焼き              SYNTH_START|mei|mei_voice_normal|目をフライパンで焼いた食べ物は？
+2608 2708 <eps>                             TEXTAREA_SET|msg_text|"めを フライパンで やいた たべものは？"
+2708 2808 SYNTH_EVENT_STOP|mei              <eps>
+2808 2502 RECOG_EVENT_STOP|目玉焼き              <eps>
+2808 2502 MMD_CAMERA_GET|目玉焼き              <eps>
+
+
+1110 2609 MMD_CAMERA_GET|なし             SYNTH_START|mei|mei_voice_normal|有るのに無い果物は？
+2609 2709 <eps>                             TEXTAREA_SET|msg_text|"あるのに ない くだものは？"
+2709 2809 SYNTH_EVENT_STOP|mei              <eps>
+2809 2502 RECOG_EVENT_STOP|なし             <eps>
+2809 2502 MMD_CAMERA_GET|なし               <eps>
+
+
+1110 2610 MMD_CAMERA_GET|花火            SYNTH_START|mei|mei_voice_normal|空に打ち上げられる花は？
+2610 2710 <eps>                             TEXTAREA_SET|msg_text|そらに うちあげられる 花は？
+2710 2810 SYNTH_EVENT_STOP|mei              <eps>
+2810 2502 RECOG_EVENT_STOP|花火              <eps>
+2810 2502 MMD_CAMERA_GET|花火              <eps>
+
+1110 2611 MMD_CAMERA_GET|カブトムシ              SYNTH_START|mei|mei_voice_normal|野菜のカブを10個も食べそうな虫は？
+2611 2711 <eps>                             TEXTAREA_SET|msg_text|"やさいの カブを 10こも たべそうな むしは？"
+2711 2811 SYNTH_EVENT_STOP|mei              <eps>
+2811 2502 RECOG_EVENT_STOP|カブトムシ              <eps>
+2811 2502 MMD_CAMERA_GET|カブトムシ              <eps>
+
+1110 2612 MMD_CAMERA_GET|三字              SYNTH_START|mei|mei_voice_normal|「とけい」は何時？
+2612 2712 <eps>                             TEXTAREA_SET|msg_text|"「とけい」は なんじ？"
+2712 2812 SYNTH_EVENT_STOP|mei              <eps>
+2812 2502 RECOG_EVENT_STOP|三字              <eps>
+2812 2502 MMD_CAMERA_GET|三字              <eps>
+
+1110 2613 MMD_CAMERA_GET|カワウソ              SYNTH_START|mei|mei_voice_normal|川でウソをつく動物は？
+2613 2713 <eps>                             TEXTAREA_SET|msg_text|"かわで ウソを つく どうぶつは？"
+2713 2813 SYNTH_EVENT_STOP|mei              <eps>
+2813 2502 RECOG_EVENT_STOP|カワウソ              <eps>
+2813 2502 MMD_CAMERA_GET|カワウソ              <eps>
+
+
+1110 2614 MMD_CAMERA_GET|しりとり              SYNTH_START|mei|mei_voice_normal|「そうめん」と言うと負けるゲームは？
+2614 2714 <eps>                             TEXTAREA_SET|msg_text|"「そうめん」と いうと まける ゲームは？"
+2714 2814 SYNTH_EVENT_STOP|mei              <eps>
+2814 2502 RECOG_EVENT_STOP|しりとり              <eps>
+2814 2502 MMD_CAMERA_GET|しりとり              <eps>
+
 
 
 1110 1113 RECOG_EVENT_STOP|ギブアップ       SYNTH_START|mei|mei_voice_normal|ギブアップしますか？
