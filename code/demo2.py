@@ -27,7 +27,7 @@ INIT_STATE = 'それではバトル開始'
 
 END_GAME = 'ゲーム終了'
 
-YOUR_TURN = 'あなたのターン'
+YOUR_TURN = 'あなたのターンです'
 MEI_TURN = 'わたしのターン'
 MARKER = 'marker'
 
@@ -83,7 +83,7 @@ quiz_enum = {
 
 SUCCESS = "成功"
 FAILURE = "失敗"
-GIVE_UP = "ギブアップします。"
+GIVE_UP = "ギブアップした"
 
 ACTION_ATTACK = "あなたの力をわたしに見せてください。"
 
@@ -617,7 +617,7 @@ class GameDebug:
         print(f"メイの攻撃: {dmg}のダメージ")
 
     def is_exercise_cleared(self, recognizer: exercise.ExerciseRecognizer):
-        return (self.mode == 'push_ups' and recognizer.push_up_count == 10) or \
+        return (self.mode == 'push_ups' and recognizer.push_up_count == 5) or \
                (self.mode == 'squats' and recognizer.squat_count == 10) or \
                (self.mode == 'crunches' and recognizer.crunch_count == 10)
 
