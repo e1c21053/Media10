@@ -449,18 +449,18 @@ class GameDebug:
         print("select card")
         self.wait(3)
         dict, parameters = self.get_aruco_dict_and_params()
-        if True:  # debug, pick card randomly
-            while True:
-                # self.active_card = self.cards[13] #クイズカード
-                # if not self.active_card.used:
-                #     print(f"selected card: {self.active_card.name}")
-                #     print(f"path: {self.active_card.path}")
-                #     break
-                self.active_card = np.random.choice(self.cards)
-                if not self.active_card.used:
-                    print(f"selected card: {self.active_card.name}")
-                    print(f"path: {self.active_card.path}")
-                    break
+        # if True:  # debug, pick card randomly
+        #     while True:
+        #         # self.active_card = self.cards[13] #クイズカード
+        #         # if not self.active_card.used:
+        #         #     print(f"selected card: {self.active_card.name}")
+        #         #     print(f"path: {self.active_card.path}")
+        #         #     break
+        #         self.active_card = np.random.choi ce(self.cards)
+        #         if not self.active_card.used:
+        #             print(f"selected card: {self.active_card.name}")
+        #             print(f"path: {self.active_card.path}")
+                    # break
         # 本来はこっち
         while not self.active_card:
             ret, frame = self.cap.read()
@@ -518,7 +518,7 @@ class GameDebug:
             base_val = self.player.gp + self.active_card.value
             mmd_msg = GUARD_CARD
         elif card_type == HEAL_CARD:
-            base_val = self.player.hp + self.active_card.value
+            base_val = self.active_card.value
             mmd_msg = HEAL_CARD
         elif card_type == BUFF_CARD:
             base_val = self.player.ap + self.active_card.value
@@ -555,7 +555,7 @@ class GameDebug:
         elif card_type == GUARD_CARD:
             self.player.gp = max(base_val, 0)
         elif card_type == HEAL_CARD:
-            self.player.hp = min(base_val, 100)
+            self.player.hp = min(self.player.hp + base_val, 100)
         elif card_type == BUFF_CARD:
             self.player.ap = base_val
         elif card_type == DRAW_CARD:
