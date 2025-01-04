@@ -390,11 +390,6 @@
 # これはデバッグ用
 2801 2502 MMD_CAMERA_GET|トラック           <eps>
 
-# ギブアップロジックは多すぎて無理
-#2801 2661 RECOG_EVENT_START|ギブアップ     SYNTH_START|mei|mei_voice_normal|ギブアップしますか？
-#2661 2601 RECOG_EVENT_STOP|はい             SYNTH_START|mei|mei_voice_normal|チャレンジしっぱいです…おつかれさまでした。
-#2661 2614 RECOG_EVENT_STOP|いいえ           SYNTH_START|mei|mei_voice_normal|では、引き続きがんばってください！
-
 1110 2602 MMD_CAMERA_GET|森                 SYNTH_START|mei|mei_voice_normal|林に木を一本追加したら何になる？
 2602 2702 <eps>                             TEXTAREA_SET|msg_text|"はやしに きを いっぽん ついかしたら\nなにに なる？"
 2702 2802 SYNTH_EVENT_STOP|mei              <eps>
@@ -445,12 +440,6 @@
 2809 2502 RECOG_EVENT_STOP|なし             <eps>
 2809 2502 MMD_CAMERA_GET|なし               <eps>
 
-
-1110 2610 MMD_CAMERA_GET|花火            SYNTH_START|mei|mei_voice_normal|空に打ち上げられる花は？
-2610 2710 <eps>                             TEXTAREA_SET|msg_text|そらに うちあげられる 花は？
-2710 2810 SYNTH_EVENT_STOP|mei              <eps>
-2810 2502 RECOG_EVENT_STOP|花火              <eps>
-2810 2502 MMD_CAMERA_GET|花火              <eps>
 
 1110 2611 MMD_CAMERA_GET|カブトムシ              SYNTH_START|mei|mei_voice_normal|野菜のカブを10個も食べそうな虫は？
 2611 2711 <eps>                             TEXTAREA_SET|msg_text|"やさいの カブを 10こも たべそうな むしは？"
