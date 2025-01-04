@@ -284,14 +284,16 @@ class GameDebug:
                 mmda_x, mmda_y, mmda_right, mmda_bottom = mmda_rect
                 mmda_width = mmda_right - mmda_x
                 offset = 10
-                windows = ['Status', 'cards', 'quiz', 'color', 'exercise', 'QR']
+                windows = ['Status', 'cards', 'quiz',
+                           'color', 'exercise', 'QR']
                 for i, window_name in enumerate(windows):
                     hwnd = win32gui.FindWindow(None, window_name)
                     if hwnd:
                         window_rect = win32gui.GetWindowRect(hwnd)
                         window_width = window_rect[2] - window_rect[0]
                         window_height = window_rect[3] - window_rect[1]
-                        new_x = mmda_x + mmda_width + offset + (i * (window_width + offset))
+                        new_x = mmda_x + mmda_width + offset + \
+                            (i * (window_width + offset))
                         new_y = mmda_y
                         if new_x + window_width > screen_width:
                             new_x = screen_width - window_width
@@ -307,7 +309,8 @@ class GameDebug:
                             win32con.SWP_NOZORDER | win32con.SWP_NOACTIVATE
                         )
             else:
-                windows = ['Status', 'cards', 'quiz', 'color', 'exercise', 'QR']
+                windows = ['Status', 'cards', 'quiz',
+                           'color', 'exercise', 'QR']
                 for i, window_name in enumerate(windows):
                     hwnd = win32gui.FindWindow(None, window_name)
                     if hwnd:
@@ -347,6 +350,7 @@ class GameDebug:
             self.challenge()
         elif GIVE_UP in message:
             self.give_up_challenge = True
+            self.is_cleared = False
         elif INVOKE in message:
             self.invoke_card()
         elif self.mode == QUIZ:
@@ -367,8 +371,6 @@ class GameDebug:
             except Exception as e:
                 print(e)
             self.is_end = True
-
-
 
     def draw_text(self, img, text, pos=(10, 30), font_path=r"code\NotoSerifJP[wght].ttf", font_size=24):
         pil_img = Image.fromarray(img)
@@ -427,7 +429,7 @@ class GameDebug:
         # else:
         #     cv2.imshow('cards', np.zeros((400, 400, 3), dtype=np.uint8))
         #     cv2.waitKey(1)
-        
+
     def player_turn(self):
         print("player turn")
         print(f"player : {self.player.__str__()}, mei : {self.mei.__str__()}")
@@ -447,7 +449,7 @@ class GameDebug:
         print("select card")
         self.wait(3)
         dict, parameters = self.get_aruco_dict_and_params()
-        if True: # debug, pick card randomly 
+        if True:  # debug, pick card randomly
             while True:
                 # self.active_card = self.cards[13] #クイズカード
                 # if not self.active_card.used:
@@ -523,8 +525,8 @@ class GameDebug:
             mmd_msg = BUFF_CARD
         elif card_type == DRAW_CARD:
             print("draw card")
-            self.active_card = None
             self.is_cleared = False
+            mmd_msg = DRAW_CARD
         else:
             print("Invalid card type")
             self.active_card = None
@@ -565,7 +567,6 @@ class GameDebug:
                 MMD().send_message(DRAW_3.encode())
             else:
                 print("Invalid draw value")
-
 
         # apply debuff
         if self.active_card.debuff_type == "harm":
@@ -627,8 +628,13 @@ class GameDebug:
         while True:
             ret, frame = self.cap.read()
             frame = recognizer.recognize_exercise(frame, self.mode)
+            recv = MMD().recv_message()
+            if recv:
+                if "チャレンジしっぱいです…おつかれさまでした。" in recv:
+                    self.is_cleared = False
+                    break
             cv2.imshow('exercise', frame)
-            if cv2.waitKey(10) & 0xFF == ord('q') or self.give_up_challenge:
+            if (cv2.waitKey(10) & 0xFF == ord('q')):
                 break
             if self.is_exercise_cleared(recognizer):
                 self.is_cleared = True
@@ -691,7 +697,7 @@ class GameDebug:
 
     def determine_challenge_mode(self):
         mode = self.active_card.fixed_challenge
-        if any([mode == c for c in [RED, GREEN, BLUE, PUSH_UPS, SQUATS, CRUNCHES,QUIZ]]):
+        if any([mode == c for c in [RED, GREEN, BLUE, PUSH_UPS, SQUATS, CRUNCHES, QUIZ]]):
             pass
         elif mode == "color":
             mode = np.random.choice([RED, GREEN, BLUE])
@@ -759,13 +765,7 @@ class GameDebug:
             try:
                 if self.player and self.mei:
                     self.show_player_status()
-                # if self.active_card is not None:
                 self.show_active_card()
-                # else:
-                #     try:
-                #         cv2.destroyWindow('cards')
-                #     except:
-                #         pass
                 self.update_window_area()
             except Exception as e:
                 print(e)
