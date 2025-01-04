@@ -34,8 +34,9 @@
 # メイはプレイヤーに対して「難易度を選択してください」と発話し、ユーザからの応答を待つ。
 3   440   TIMER_EVENT_STOP|idle1            MOTION_ADD|mei|greeting|Motion\mei_greeting\mei_greeting.vmd|PART|ONCE
 # デバッグ用のチュートリアルスキップ
+440 8999   <eps>                             <eps>
 #440 8999   <eps>                             <eps>
-440 441   <eps>                             TEXTAREA_SET|msg_textbox|Accessory\img\sentence_txtbox.png
+#440 441   <eps>                             TEXTAREA_SET|msg_textbox|Accessory\img\sentence_txtbox.png
 441 442   <eps>                             SYNTH_START|mei|mei_voice_normal|はじめまして。私の名前はメイです。みてのとおり、アンドロイドです。
 442 443   <eps>                             TEXTAREA_SET|msg_text|"はじめまして。私の名前はメイです。\nみてのとおり、アンドロイドです。"
 443 444   SYNTH_EVENT_STOP|mei              SYNTH_START|mei|mei_voice_normal|あなたはここにとじこめられています。ここを出るにはわたしをたおすしかありません。
@@ -91,6 +92,7 @@
 #9   908   <eps>                             MOTION_ADD|mei|mei_guide_happy|Motion\mei_guide\mei_guide_happy.vmd|PART|ONCE
 9   900   <eps>                             MOTION_ADD|mei|mei_guide_happy|Motion\mei_guide\mei_guide_happy.vmd|PART|ONCE
 8   310   RECOG_EVENT_STOP|いいえ           SYNTH_START|mei|mei_voice_normal|持っているカードを全てデッキに戻して、カードをデッキから5枚引いてください。その中に攻撃カードはありますか？
+8   310   RECOG_EVENT_STOP|いえ           SYNTH_START|mei|mei_voice_normal|持っているカードを全てデッキに戻して、カードをデッキから5枚引いてください。その中に攻撃カードはありますか？
 8   310   RECOG_EVENT_STOP|ない             SYNTH_START|mei|mei_voice_normal|持っているカードを全てデッキに戻して、カードをデッキから5枚引いてください。その中に攻撃カードはありますか？
 8   310   RECOG_EVENT_STOP|あり,ませ,ん     SYNTH_START|mei|mei_voice_normal|持っているカードを全てデッキに戻して、カードをデッキから5枚引いてください。その中に攻撃カードはありますか？
 8   310   MMD_CAMERA_GET|いいえ             SYNTH_START|mei|mei_voice_normal|持っているカードを全てデッキに戻して、カードをデッキから5枚引いてください。その中に攻撃カードはありますか？
@@ -103,6 +105,7 @@
 902  903  SYNTH_EVENT_STOP|mei              <eps>
 903  908  RECOG_EVENT_STOP|はい             SYNTH_START|mei|mei_voice_normal|わかりました。
 903  908  MMD_CAMERA_GET|はい               SYNTH_START|mei|mei_voice_normal|わかりました。
+903  8810 RECOG_EVENT_STOP|いいえ             SYNTH_START|mei|mei_voice_normal|わかりました。
 903  8810 RECOG_EVENT_STOP|いえ             SYNTH_START|mei|mei_voice_normal|わかりました。
 903  8810 MMD_CAMERA_GET|いいえ             SYNTH_START|mei|mei_voice_normal|わかりました。
 
@@ -158,6 +161,7 @@
 
 9103 9104 RECOG_EVENT_STOP|ない             <eps>
 9103 9104 RECOG_EVENT_STOP|いいえ           <eps>
+9103 9104 RECOG_EVENT_STOP|いえ           <eps>
 9103 9104 RECOG_EVENT_STOP|大丈夫           <eps>
 9103 9104 RECOG_EVENT_STOP|あり,ませ,ん     <eps>
 9103 9104 MMD_CAMERA_GET|いいえ             <eps>
@@ -184,13 +188,13 @@
 
 #難易度選択
 8810 8999 SYNTH_EVENT_STOP|mei              <eps>
-8999 8811 <eps>                              SYNTH_START|mei|mei_voice_normal|では、バトルをはじめましょう。
+8999 8811 <eps>                             SYNTH_START|mei|mei_voice_normal|では、バトルをはじめましょう。
 8811 8812 <eps>                             TEXTAREA_SET|msg_text|"では バトルを はじめましょう。"
 #8812 8813 <eps>                             MOTION_ADD|mei|toridasi|Motion\mei_adv\kado_toridasi.vmd|PART|ONCE
 8812 8814 SYNTH_EVENT_STOP|mei              SYNTH_START|mei|mei_voice_normal|難易度を選択してください。
 8814 8815 <eps>                             TEXTAREA_SET|msg_text|"なんいどを せんたくしてください。"
 8815 8816 <eps>                             TEXTAREA_SET|menu_textbox|Accessory\img\menu_txtbox.png
-8816 221   <eps>                             TEXTAREA_SET|menu_text|"かんたん\nふつう\nむずかしい"
+8816 221  <eps>                             TEXTAREA_SET|menu_text|"かんたん\nふつう\nむずかしい"
 
 
 #20   21   SYNTH_EVENT_STOP|mei              <eps>
@@ -199,7 +203,7 @@
 221   223  RECOG_EVENT_STOP|普通             <eps>
 221   223  MMD_CAMERA_GET|普通               <eps>
 221   224  RECOG_EVENT_STOP|難しい           <eps>
-221   224  MMD_CAMERA_GET|難しい           <eps>
+221   224  MMD_CAMERA_GET|難しい             <eps>
 222   231  <eps>                             SYNTH_START|mei|mei_voice_normal|簡単を選択しました。
 231   225  <eps>                             TEXTAREA_SET|msg_text|"かんたん をせんたくしました。"
 223   232  <eps>                             SYNTH_START|mei|mei_voice_normal|普通を選択しました。
@@ -213,7 +217,7 @@
 
 
 # バトル
-100  101  <eps>                             SYNTH_START|mei|mei_voice_normal|それではバトル開始。
+100  101  <eps>                             SYNTH_START|mei|mei_voice_normal|バトル開始。
 101  102  <eps>                             MOTION_ADD|mei|toridasi|Motion\mei_adv\kado_toridasi.vmd|PART|ONCE
 102  103  SYNTH_EVENT_STOP|mei              TEXTAREA_SET|msg_textbox|Accessory\img\sentence_txtbox.png
 103  104  <eps>                             <eps>
@@ -245,6 +249,7 @@
 1108 1120 <eps>                             TEXTAREA_SET|msg_text|"では あなたのターンは おわりです。"
 1120 600  SYNTH_EVENT_STOP|mei              <eps>
 
+1107 1109 RECOG_EVENT_STOP|いいえ             SYNTH_START|mei|mei_voice_normal|では、引き続きあなたのターンです。
 1107 1109 RECOG_EVENT_STOP|いえ             SYNTH_START|mei|mei_voice_normal|では、引き続きあなたのターンです。
 1107 1109 RECOG_EVENT_STOP|し,ませ,ん       SYNTH_START|mei|mei_voice_normal|では、引き続きあなたのターンです。
 1109 1103 <eps>                             TEXTAREA_SET|msg_text|"では、ひきつづき あなたのターン です。"
@@ -260,23 +265,31 @@
 1301 1400 MMD_CAMERA_GET|draw               <eps>
 1400 1401 <eps>                             SYNTH_START|mei|mei_voice_normal|おだい付きカードをよみこみました。それではお題を抽選します。
 1401 1402 <eps>                             TEXTAREA_SET|msg_text|"おだい付きカードを よみこみました。\nそれでは おだいを ちゅうせんします。"
-1402 1403 SYNTH_EVENT_STOP|mei              <eps>
+1402 1403 SYNTH_EVENT_STOP|mei              TEXTAREA_SET|menu_textbox|Accessory\img\menu_txtbox.png 
 
 1403 1400 MMD_CAMERA_GET|ERROR              <eps>
 1403 1404 MMD_CAMERA_GET|push_ups           SYNTH_START|mei|mei_voice_normal|腕立て伏せ。が選択されました。
-1404 1003 <eps>                             TEXTAREA_SET|msg_text|"”うでたてふせ” がせんたくされました。"
+1404 1411 <eps>                             TEXTAREA_SET|msg_text|"”うでたてふせ” がせんたくされました。"
+1411 1003 <eps>                             TEXTAREA_SET|menu_text|"【おだい】\nうでたてふせ\n5回"
 1403 1405 MMD_CAMERA_GET|squats             SYNTH_START|mei|mei_voice_normal|スクワット。が選択されました。
-1405 1003 <eps>                             TEXTAREA_SET|msg_text|"”スクワット” がせんたくされました。"
+1405 1412 <eps>                             TEXTAREA_SET|msg_text|"”スクワット” がせんたくされました。"
+1412 1003 <eps>                             TEXTAREA_SET|menu_text|"【おだい】\nスクワット\n10回"
 1403 1406 MMD_CAMERA_GET|crunches           SYNTH_START|mei|mei_voice_normal|腹筋。が選択されました。
-1406 1003 <eps>                             TEXTAREA_SET|msg_text|"”ふっきん” がせんたくされました。"
+1406 1413 <eps>                             TEXTAREA_SET|msg_text|"”ふっきん” がせんたくされました。"
+1413 1003 <eps>                             TEXTAREA_SET|menu_text|"【おだい】\nふっきん\n10回"
+
 1403 1407 MMD_CAMERA_GET|red                SYNTH_START|mei|mei_voice_normal|赤色を探せ。が選択されました。
-1407 1003 <eps>                             TEXTAREA_SET|msg_text|"”あかいろ をさがせ” がせんたくされました。"
+1407 1414 <eps>                             TEXTAREA_SET|msg_text|"”赤色 をさがせ” がせんたくされました。"
+1414 1003 <eps>                             TEXTAREA_SET|menu_text|"【おだい】\n赤色をさがせ"
 1403 1408 MMD_CAMERA_GET|blue               SYNTH_START|mei|mei_voice_normal|青色を探せ。が選択されました。
-1408 1003 <eps>                             TEXTAREA_SET|msg_text|"”あおいろ をさがせ” がせんたくされました。"
+1408 1415 <eps>                             TEXTAREA_SET|msg_text|"”青色 をさがせ” がせんたくされました。"
+1415 1003 <eps>                             TEXTAREA_SET|menu_text|"【おだい】\n青色をさがせ"
 1403 1409 MMD_CAMERA_GET|green              SYNTH_START|mei|mei_voice_normal|みどりいろを探せ。が選択されました。
-1409 1003 <eps>                             TEXTAREA_SET|msg_text|"”みどりいろ をさがせ” がせんたくされました。"   
+1409 1416 <eps>                             TEXTAREA_SET|msg_text|"”みどり色 をさがせ” がせんたくされました。" 
+1416 1003 <eps>                             TEXTAREA_SET|menu_text|"【おだい】\nみどり色を\nさがせ"  
 1403 1410 MMD_CAMERA_GET|quiz               SYNTH_START|mei|mei_voice_normal|クイズ。が選択されました。
-1410 1003 <eps>                             TEXTAREA_SET|msg_text|"”クイズ” がせんたくされました。"
+1410 1417 <eps>                             TEXTAREA_SET|msg_text|"”クイズ” がせんたくされました。"
+1417 1003 <eps>                             TEXTAREA_SET|menu_text|"【おだい】\nクイズ"
 
 1003 1004 SYNTH_EVENT_STOP|mei              SYNTH_START|mei|mei_voice_normal|お題にチャレンジしますか？
 1004 1005 <eps>                             TEXTAREA_SET|msg_text|"おだいに チャレンジしますか？"
@@ -284,9 +297,12 @@
 1005 1006 RECOG_EVENT_STOP|し,ます          SYNTH_START|mei|mei_voice_normal|お題にチャレンジします。それではがんばってください。むずかしいときは、「ギブアップ」ということでしっぱいあつかいでしゅうりょうできます。
 1006 1100 <eps>                             TEXTAREA_SET|msg_text|"おだいに チャレンジします。それでは がんばってください。\nむずかしいときは、「ギブアップ」ということで \nしっぱい あつかいで しゅうりょうできます。"
 
+1005 1001 RECOG_EVENT_STOP|いいえ             SYNTH_START|mei|mei_voice_normal|お題にチャレンジしません。こんかいは,追加効果なしでとくしゅこうかをはつどうします。
 1005 1001 RECOG_EVENT_STOP|いえ             SYNTH_START|mei|mei_voice_normal|お題にチャレンジしません。こんかいは,追加効果なしでとくしゅこうかをはつどうします。
 1005 1001 RECOG_EVENT_STOP|し,ませ,ん       SYNTH_START|mei|mei_voice_normal|お題にチャレンジしません。こんかいは,追加効果なしでとくしゅこうかをはつどうします。
-1001 1507 <eps>                             TEXTAREA_SET|msg_text|"おだいに チャレンジしません。\nこんかいは、ついかこうか なしで\nとくしゅこうか を はつどうします。"
+1001 1200 <eps>                             TEXTAREA_SET|msg_text|"おだいに チャレンジしません。\nこんかいは、ついかこうか なしで\nとくしゅこうか を はつどうします。"
+1200 1201 <eps>                             TEXTAREA_SET|menu_textbox|Accessory\img\clean.png
+1201 1507 <eps>                             TEXTAREA_SET|menu_text|Accessory\img\clean.png
 
 1507 1007 SYNTH_EVENT_STOP|mei              <eps>
 1007 1008 <eps>                             SYNTH_START|mei|mei_voice_normal|カードを発動します。
@@ -437,9 +453,11 @@
 
 1110 1111 MMD_CAMERA_GET|成功               <eps>
 1111 1112 <eps>                             SYNTH_START|mei|mei_voice_normal|チャレンジせいこうです！おめでとうございます。カードのこうかがアップしました
-1112 1115 <eps>                             TEXTAREA_SET|msg_text|"チャレンジせいこうです！\nおめでとうございます。\nカードのこうかがアップしました。"
+1112 1210 <eps>                             TEXTAREA_SET|msg_text|"チャレンジせいこうです！\nおめでとうございます。\nカードのこうかがアップしました。"
 1110 1122 MMD_CAMERA_GET|失敗               SYNTH_START|mei|mei_voice_normal|チャレンジしっぱいです…おつかれさまでした。
-1122 1115 <eps>                             TEXTAREA_SET|msg_text|"チャレンジしっぱいです・・・\nおつかれさまでした。"
+1122 1210 <eps>                             TEXTAREA_SET|msg_text|"チャレンジしっぱいです・・・\nおつかれさまでした。"
+1210 1211 <eps>                             TEXTAREA_SET|menu_textbox|Accessory\img\clean.png
+1211 1115 <eps>                             TEXTAREA_SET|menu_text|Accessory\img\clean.png
 
 2502 2503 <eps>                             SYNTH_START|mei|mei_voice_normal|正解です
 2503 2504 <eps>                             TEXTAREA_SET|msg_text|"せいかい です"
@@ -451,6 +469,11 @@
 2801 2502 RECOG_EVENT_STOP|トラック         <eps>
 # これはデバッグ用
 2801 2502 MMD_CAMERA_GET|トラック           <eps>
+
+# ギブアップロジックは多すぎて無理
+#2801 2661 RECOG_EVENT_START|ギブアップ     SYNTH_START|mei|mei_voice_normal|ギブアップしますか？
+#2661 2601 RECOG_EVENT_STOP|はい             SYNTH_START|mei|mei_voice_normal|チャレンジしっぱいです…おつかれさまでした。
+#2661 2614 RECOG_EVENT_STOP|いいえ           SYNTH_START|mei|mei_voice_normal|では、引き続きがんばってください！
 
 1110 2602 MMD_CAMERA_GET|森                 SYNTH_START|mei|mei_voice_normal|林に木を一本追加したら何になる？
 2602 2702 <eps>                             TEXTAREA_SET|msg_text|"林に 木を 一本 ついかしたら\nなにに なる？"
@@ -505,10 +528,14 @@
 2809 2502 MMD_CAMERA_GET|なし               <eps>
 
 
+1110 2610 MMD_CAMERA_GET|花火               SYNTH_START|mei|mei_voice_normal|空に打ち上げられる花は？
+2610 2710 <eps>                             TEXTAREA_SET|msg_text|"空に うちあげられる 花は？"
+2710 2810 SYNTH_EVENT_STOP|mei              <eps>
+2810 2502 RECOG_EVENT_STOP|花火             <eps>
+2810 2502 MMD_CAMERA_GET|花火               <eps>
 
-1110 2611 MMD_CAMERA_GET|カブトムシ              SYNTH_START|mei|mei_voice_normal|野菜のカブを10個も食べそうな虫は？
-2611 2711 <eps>                             TEXTAREA_SET|msg_text|"やさいの カブを 10こも たべそうな むしは？"
-
+1110 2611 MMD_CAMERA_GET|カブトムシ         SYNTH_START|mei|mei_voice_normal|野菜のカブを10個も食べそうな虫は？
+2611 2711 <eps>                             TEXTAREA_SET|msg_text|"やさいの カブを\n10こも たべそうな 虫は？"
 2711 2811 SYNTH_EVENT_STOP|mei              <eps>
 2811 2502 RECOG_EVENT_STOP|カブトムシ       <eps>
 2811 2502 MMD_CAMERA_GET|カブトムシ         <eps>
@@ -538,10 +565,13 @@
 1110 1113 RECOG_EVENT_STOP|諦める           SYNTH_START|mei|mei_voice_normal|ギブアップしますか？
 1113 1116 <eps>                             TEXTAREA_SET|msg_text|"ギブアップしますか？"
 
-1116 1114 RECOG_EVENT_STOP|はい             SYNTH_START|mei|mei_voice_normal|チャレンジしっぱいです…おつかれさまでした。
-1116 1114 MMD_CAMERA_GET|はい               SYNTH_START|mei|mei_voice_normal|チャレンジしっぱいです…おつかれさまでした。
-1114 1115 <eps>                             TEXTAREA_SET|msg_text|"チャレンジしっぱいです・・・\nおつかれさまでした。"
+1116 1114 RECOG_EVENT_STOP|はい             SYNTH_START|mei|mei_voice_normal|ギブアップしたので、チャレンジしっぱいです…おつかれさまでした。
+1116 1114 RECOG_EVENT_STOP|し,ます          SYNTH_START|mei|mei_voice_normal|ギブアップしたので、チャレンジしっぱいです…おつかれさまでした。
+1116 1114 MMD_CAMERA_GET|はい               SYNTH_START|mei|mei_voice_normal|ギブアップしたので、チャレンジしっぱいです…おつかれさまでした。
+1114 1210 <eps>                             TEXTAREA_SET|msg_text|"ギブアップしたので、チャレンジしっぱいです・・・\nおつかれさまでした。"
 1116 1117 RECOG_EVENT_STOP|いいえ           SYNTH_START|mei|mei_voice_normal|では、引き続きがんばってください！
+1116 1117 RECOG_EVENT_STOP|いえ             SYNTH_START|mei|mei_voice_normal|では、引き続きがんばってください！
+1116 1117 RECOG_EVENT_STOP|し,ませ,ん       SYNTH_START|mei|mei_voice_normal|では、引き続きがんばってください！
 1116 1117 MMD_CAMERA_GET|いいえ             SYNTH_START|mei|mei_voice_normal|では、引き続きがんばってください！
 1117 1110 <eps>                             TEXTAREA_SET|msg_text|"では、ひきつづき がんばってください！"
 
