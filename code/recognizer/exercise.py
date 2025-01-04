@@ -141,7 +141,7 @@ class ExerciseRecognizer:
         # push_up_countとかを表示する
         attr_dict = {}
         for attr in dir(self):
-            if not attr.startswith("__") and not callable(getattr(self, attr)):
+            if not attr.startswith("_") and not callable(getattr(self, attr)):
                 attr_dict[attr] = getattr(self, attr)
         for i, (key, value) in enumerate(attr_dict.items()):
             cv2.putText(frame, f'{key}: {value}', (10, 30 + i*30),
