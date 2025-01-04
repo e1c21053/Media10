@@ -75,7 +75,6 @@ quiz_enum = {
     "半分にすると０になる数字は？": "八",
     "目をフライパンで焼いた食べ物は？": "目玉焼き",
     "有るのに無い果物は？": "なし",
-    "空に打ち上げられる花は？": "花火",
     "野菜のカブを10個も食べそうな虫は？": "カブトムシ",
     "「とけい」は何時？": "さんじ",
     "川でウソをつく動物は？": "カワウソ",
@@ -362,7 +361,6 @@ class GameDebug:
             self.player = Status(100, 0)
             self.mei = Status(100, 0)
         elif END_GAME in message:
-            print("end game")
             try:
                 # fstでMMDAgentを終了させられるならいらない
                 os.system("taskkill /f /im MMDAgent.exe")
