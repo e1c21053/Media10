@@ -34,8 +34,8 @@
 # メイはプレイヤーに対して「難易度を選択してください」と発話し、ユーザからの応答を待つ。
 3   440   TIMER_EVENT_STOP|idle1            MOTION_ADD|mei|greeting|Motion\mei_greeting\mei_greeting.vmd|PART|ONCE
 # デバッグ用のチュートリアルスキップ
-440 6000   <eps>                             <eps>
-#440 8999   <eps>                             <eps>
+#440 6000   <eps>                             <eps>
+440 8999   <eps>                             <eps>
 440 441   <eps>                             TEXTAREA_SET|msg_textbox|Accessory\img\sentence_txtbox.png
 441 442   <eps>                             SYNTH_START|mei|mei_voice_normal|はじめまして。私の名前はメイです。みてのとおり、アンドロイドです。
 442 443   <eps>                             TEXTAREA_SET|msg_text|"はじめまして。私の名前はメイです。\nみてのとおり、アンドロイドです。"
@@ -454,10 +454,10 @@
 701 702 <eps>                               TEXTAREA_SET|msg_text|"いまから いう まいすう ドローしてください。"
 702 703 SYNTH_EVENT_STOP|mei                <eps>
 703 704 MMD_CAMERA_GET|draw2                SYNTH_START|mei|mei_voice_normal|2まいドローしてください
-704 709 <eps>                               TEXTAREA_SET|msg_text|"2まい ドローしてください。"
+704 502 <eps>                               TEXTAREA_SET|msg_text|"2まい ドローしてください。"
 703 705 MMD_CAMERA_GET|draw3                SYNTH_START|mei|mei_voice_normal|3まいドローしてください
-705 709 <eps>                               TEXTAREA_SET|msg_text|"3まい ドローしてください。"
-709 1002 SYNTH_EVENT_STOP|mei                 <eps>
+705 502 <eps>                               TEXTAREA_SET|msg_text|"3まい ドローしてください。"
+
 
 
 # お題待機

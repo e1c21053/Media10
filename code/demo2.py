@@ -76,7 +76,7 @@ quiz_enum = {
     "目をフライパンで焼いた食べ物は？": "目玉焼き",
     "有るのに無い果物は？": "なし",
     "野菜のカブを10個も食べそうな虫は？": "カブトムシ",
-    "「とけい」は何時？": "さんじ",
+    "「とけい」は何時？": "三字",
     "川でウソをつく動物は？": "カワウソ",
     "「そうめん」と言うと負けるゲームは？": "しりとり"
 }
@@ -450,18 +450,18 @@ class GameDebug:
         print("select card")
         self.wait(3)
         dict, parameters = self.get_aruco_dict_and_params()
-        # if True:  # debug, pick card randomly
-        #     while True:
-        #         # self.active_card = self.cards[13] #クイズカード
-        #         # if not self.active_card.used:
-        #         #     print(f"selected card: {self.active_card.name}")
-        #         #     print(f"path: {self.active_card.path}")
-        #         #     break
-        #         self.active_card = np.random.choi ce(self.cards)
-        #         if not self.active_card.used:
-        #             print(f"selected card: {self.active_card.name}")
-        #             print(f"path: {self.active_card.path}")
-                    # break
+        if True:  # debug, pick card randomly
+            while True:
+                self.active_card = self.cards[13] #クイズカード
+                if not self.active_card.used:
+                    print(f"selected card: {self.active_card.name}")
+                    print(f"path: {self.active_card.path}")
+                    break
+                self.active_card = np.random.choice(self.cards)
+                if not self.active_card.used:
+                    print(f"selected card: {self.active_card.name}")
+                    print(f"path: {self.active_card.path}")
+                    break
         # 本来はこっち
         while not self.active_card:
             ret, frame = self.cap.read()
@@ -526,8 +526,8 @@ class GameDebug:
             mmd_msg = BUFF_CARD
         elif card_type == DRAW_CARD:
             print("draw card")
-            self.is_cleared = False
             mmd_msg = DRAW_CARD
+            base_val = self.active_card.value
         else:
             print("Invalid card type")
             self.active_card = None
@@ -559,15 +559,6 @@ class GameDebug:
             self.player.hp = min(self.player.hp + base_val, 100)
         elif card_type == BUFF_CARD:
             self.player.ap = base_val
-        elif card_type == DRAW_CARD:
-            if base_val == DRAW_2:
-                print("draw 2 cards")
-                MMD().send_message(DRAW_2.encode())
-            elif base_val == DRAW_3:
-                print("draw 3 cards")
-                MMD().send_message(DRAW_3.encode())
-            else:
-                print("Invalid draw value")
 
         # apply debuff
         if self.active_card.debuff_type == "harm":
@@ -578,6 +569,16 @@ class GameDebug:
             target = np.random.choice([self.mei, self.player])
             target.hp = max(target.hp - self.active_card.debuff_value, 0)
         MMD().send_message(mmd_msg.encode())
+        if card_type == DRAW_CARD:
+            self.wait(3)
+            if base_val == 2:
+                print("draw 2 cards")
+                MMD().send_message(DRAW_2.encode())
+            elif base_val == 3:
+                print("draw 3 cards")
+                MMD().send_message(DRAW_3.encode())
+            else:
+                print("Invalid draw value")
         self.show_player_status()
         self.active_card = None
         self.is_cleared = False
