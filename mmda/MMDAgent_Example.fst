@@ -108,8 +108,9 @@
 902  903  SYNTH_EVENT_STOP|mei              <eps>
 903  908  RECOG_EVENT_STOP|はい             SYNTH_START|mei|mei_voice_normal|わかりました。
 903  908  MMD_CAMERA_GET|はい               SYNTH_START|mei|mei_voice_normal|わかりました。
-903  8810 RECOG_EVENT_STOP|いいえ             SYNTH_START|mei|mei_voice_normal|わかりました。
+903  8810 RECOG_EVENT_STOP|いいえ           SYNTH_START|mei|mei_voice_normal|わかりました。
 903  8810 RECOG_EVENT_STOP|いえ             SYNTH_START|mei|mei_voice_normal|わかりました。
+903  8810 RECOG_EVENT_STOP|大丈夫           SYNTH_START|mei|mei_voice_normal|わかりました。
 903  8810 MMD_CAMERA_GET|いいえ             SYNTH_START|mei|mei_voice_normal|わかりました。
 
 # ルール説明
@@ -304,11 +305,13 @@
 
 1003 1004 SYNTH_EVENT_STOP|mei              SYNTH_START|mei|mei_voice_normal|お題にチャレンジしますか？
 1004 1005 <eps>                             TEXTAREA_SET|msg_text|"おだいに チャレンジしますか？"
-1005 1006 RECOG_EVENT_STOP|はい             SYNTH_START|mei|mei_voice_normal|お題にチャレンジします。それではがんばってください。むずかしいときは、「ギブアップ」ということでしっぱいあつかいでしゅうりょうできます。
-1005 1006 RECOG_EVENT_STOP|し,ます          SYNTH_START|mei|mei_voice_normal|お題にチャレンジします。それではがんばってください。むずかしいときは、「ギブアップ」ということでしっぱいあつかいでしゅうりょうできます。
-1006 1100 <eps>                             TEXTAREA_SET|msg_text|"おだいに チャレンジします。それでは がんばってください。\nむずかしいときは、「ギブアップ」ということで \nしっぱい あつかいで しゅうりょうできます。"
+1005 1006 RECOG_EVENT_STOP|はい             SYNTH_START|mei|mei_voice_normal|お題にチャレンジします。それではがんばってください。
+1005 1006 RECOG_EVENT_STOP|し,ます          SYNTH_START|mei|mei_voice_normal|お題にチャレンジします。それではがんばってください。
+1006 110  <eps>                             TEXTAREA_SET|msg_text|"おだいに チャレンジします。\nそれでは がんばってください。"
+110  111  SYNTH_EVENT_STOP|mei              SYNTH_START|mei|mei_voice_normal|むずかしいときは、「ギブアップ」ということでしっぱいあつかいでしゅうりょうできます。
+111  1100 <eps>                             TEXTAREA_SET|msg_text|"むずかしいときは、「ギブアップ」ということで \nしっぱい あつかいで しゅうりょうできます。"
 
-1005 1001 RECOG_EVENT_STOP|いいえ             SYNTH_START|mei|mei_voice_normal|お題にチャレンジしません。こんかいは,追加効果なしでとくしゅこうかをはつどうします。
+1005 1001 RECOG_EVENT_STOP|いいえ           SYNTH_START|mei|mei_voice_normal|お題にチャレンジしません。こんかいは,追加効果なしでとくしゅこうかをはつどうします。
 1005 1001 RECOG_EVENT_STOP|いえ             SYNTH_START|mei|mei_voice_normal|お題にチャレンジしません。こんかいは,追加効果なしでとくしゅこうかをはつどうします。
 1005 1001 RECOG_EVENT_STOP|し,ませ,ん       SYNTH_START|mei|mei_voice_normal|お題にチャレンジしません。こんかいは,追加効果なしでとくしゅこうかをはつどうします。
 1001 1200 <eps>                             TEXTAREA_SET|msg_text|"おだいに チャレンジしません。\nこんかいは、ついかこうか なしで\nとくしゅこうか を はつどうします。"
