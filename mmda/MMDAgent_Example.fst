@@ -35,10 +35,8 @@
 # メイはプレイヤーに対して「難易度を選択してください」と発話し、ユーザからの応答を待つ。
 3   440   TIMER_EVENT_STOP|idle1            MOTION_ADD|mei|greeting|Motion\mei_greeting\mei_greeting.vmd|PART|ONCE
 # デバッグ用のチュートリアルスキップ
-
-#440 6000   <eps>                             <eps>
+#3 7020  <eps>                              <eps>
 #440 8999   <eps>                             <eps>
-
 440 441   <eps>                             TEXTAREA_SET|msg_textbox|Accessory\img\sentence_txtbox.png
 441 442   <eps>                             SYNTH_START|mei|mei_voice_normal|はじめまして。私の名前はメイです。みてのとおり、アンドロイドです。
 442 443   <eps>                             TEXTAREA_SET|msg_text|"はじめまして。私の名前はメイです。\nみてのとおり、アンドロイドです。"
@@ -75,14 +73,16 @@
 426 427   SYNTH_EVENT_STOP|mei              TIMER_START|wait|1.0
 427 428   TIMER_EVENT_STOP|wait             SYNTH_START|mei|mei_voice_normal|思い出しました。わたしは操られていました。
 428 429   <eps>                             TEXTAREA_SET|msg_text|"思い出しました。\nわたしは あやつられていました。"
-429 430   SYNTH_EVENT_STOP|mei              SYNTH_START|mei|mei_voice_normal|わたしを倒して、この地獄から解放してくれませんか。
-430 431   <eps>                             TEXTAREA_SET|msg_text|"わたしを たおして このじごくから\nかいほうしてくれませんか？"
-431 432   <eps>                             MOTION_ADD|mei|greeting|Motion\mei_greeting\mei_greeting.vmd|PART|ONCE
-432 433   SYNTH_EVENT_STOP|mei              <eps>
-433 434   RECOG_EVENT_STOP|はい             SYNTH_START|mei|mei_voice_normal|ありがとうございます。
-433 434   MMD_CAMERA_GET|はい               SYNTH_START|mei|mei_voice_normal|ありがとうございます。
-434 435   <eps>                             TEXTAREA_SET|msg_text|"ありがとうございます。" 
-435 6     <eps>                             VALUE_SET|end_flag|2
+429 430   <eps>                             MOTION_ADD|mei|mei_surprise|Motion\mei_surprise\mei_surprise_small.vmd|PART|ONCE
+430 431   SYNTH_EVENT_STOP|mei              SYNTH_START|mei|mei_voice_normal|わたしを倒して、この地獄から解放してくれませんか。
+431 432   <eps>                             TEXTAREA_SET|msg_text|"わたしを たおして このじごくから\nかいほうしてくれませんか？"
+432 433   <eps>                             MOTION_ADD|mei|greeting|Motion\mei_greeting\mei_greeting.vmd|PART|ONCE
+433 434   SYNTH_EVENT_STOP|mei              <eps>
+434 435   RECOG_EVENT_STOP|はい             SYNTH_START|mei|mei_voice_normal|ありがとうございます。
+434 435   MMD_CAMERA_GET|はい               SYNTH_START|mei|mei_voice_normal|ありがとうございます。
+435 436   <eps>                             TEXTAREA_SET|msg_text|"ありがとうございます。" 
+436 437   <eps>                             MOTION_ADD|mei|mei_guide_happy|Motion\mei_guide\mei_guide_happy.vmd|PART|ONCE
+437 6     <eps>                             VALUE_SET|end_flag|2
 
 6   36    SYNTH_EVENT_STOP|mei              SYNTH_START|mei|mei_voice_normal|用意したデッキからカードを5枚引いてください。その中に攻撃カードはありますか？
 36  7     <eps>                             TEXTAREA_SET|msg_text|"デッキから カードを５まい引いてください。\nその中に”こうげきカード”はありますか？"
@@ -136,12 +136,16 @@
 9034 9100 SYNTH_EVENT_STOP|mei              TIMER_START|wait|0.8
 
 # ルール説明リスト
-9100 9120 TIMER_EVENT_STOP|wait             SYNTH_START|mei|mei_voice_normal|なにかわからないことはありますか？このリストの中のことばをいえば、そのせつめいをします。
-9120 9121 <eps>                             TEXTAREA_SET|menu_textbox|Accessory\img\menu_txtbox_long.png
-9121 9102 <eps>                             TEXTAREA_SET|menu_text_long|"ルール　　　　　　ひさしぶり\nこうげきカード\nとくしゅカード\nおだい"
+9100 9120 TIMER_EVENT_STOP|wait             SYNTH_START|mei|mei_voice_normal|なにかわからないことはありますか？
+9120 9121 <eps>                             TEXTAREA_SET|msg_text|"なにか わからないことは ありますか？\nこのリストの中の ことばを いえば、\nその せつめいを します。"
+9121 9122 <eps>                             TEXTAREA_SET|menu_textbox|Accessory\img\menu_txtbox_long.png
+9122 9123 <eps>                             TEXTAREA_SET|menu_text_long|"ルール　　　　　　ひさしぶり\nこうげきカード\nとくしゅカード\nおだい"
+9123 9124 SYNTH_EVENT_STOP|mei              SYNTH_START|mei|mei_voice_normal|このリストの中のことばをいえば、そのせつめいをします。
+9124 9103 <eps>                             MOTION_ADD|mei|point_menu|Motion\mei_point\mei_point_left_bottom.vmd|PART|ONCE
 
 9101 9102 SYNTH_EVENT_STOP|mei              SYNTH_START|mei|mei_voice_normal|ほかにわからないことはありますか？
-9102 9103 <eps>                             TEXTAREA_SET|msg_text|"なにか わからないことは ありますか？"
+9102 9202 <eps>                             MOTION_ADD|mei|point_menu|Motion\mei_point\mei_point_left_bottom.vmd|PART|ONCE
+9202 9103 <eps>                             TEXTAREA_SET|msg_text|"なにか わからないことは ありますか？"
 
 9103 9105 RECOG_EVENT_STOP|ルール           SYNTH_START|mei|mei_voice_normal|ターンごとにこうたいでカードをつかってたたかいます。
 9103 9105 MMD_CAMERA_GET|ルール             SYNTH_START|mei|mei_voice_normal|ターンごとにこうたいでカードをつかってたたかいます。
@@ -198,7 +202,8 @@
 8812 8814 SYNTH_EVENT_STOP|mei              SYNTH_START|mei|mei_voice_normal|難易度を選択してください。
 8814 8815 <eps>                             TEXTAREA_SET|msg_text|"なんいどを せんたくしてください。"
 8815 8816 <eps>                             TEXTAREA_SET|menu_textbox|Accessory\img\menu_txtbox.png
-8816 221  <eps>                             TEXTAREA_SET|menu_text|"かんたん\nふつう\nむずかしい"
+8816 8817 <eps>                             TEXTAREA_SET|menu_text|"かんたん\nふつう\nむずかしい"
+8817 221  <eps>                             MOTION_ADD|mei|point_menu|Motion\mei_point\mei_point_left_bottom.vmd|PART|ONCE
 
 
 #20   21   SYNTH_EVENT_STOP|mei              <eps>
@@ -229,12 +234,14 @@
 105  106  <eps>                             <eps>
 106  1000 <eps>                             <eps>
 1000 1010 <eps>                             SYNTH_START|mei|mei_voice_normal|あなたのターンです。
-1010 1012 <eps>                             TEXTAREA_SET|msg_text|"あなたのターンです。"
+1010 1011 <eps>                             TEXTAREA_SET|msg_text|"あなたのターンです。"
+1011 1012 <eps>                             MOTION_ADD|mei|mei_point_player|Motion\mei_point\mei_point_center_bottom.vmd|PART|ONCE
 1012 1002 SYNTH_EVENT_STOP|mei              <eps>
 
 1020 1021 SYNTH_EVENT_STOP|mei              SYNTH_START|mei|mei_voice_normal|あなたのターンです。デッキからカードを1まいひいてください。
 1021 1022 <eps>                             TEXTAREA_SET|msg_text|"あなたのターンです。\nデッキから カードを 1まい 引いてください。"
-1022 1002 SYNTH_EVENT_STOP|mei              <eps>
+1022 1023 <eps>                             MOTION_ADD|mei|mei_point_player|Motion\mei_point\mei_point_center_bottom.vmd|PART|ONCE
+1023 1002 SYNTH_EVENT_STOP|mei              <eps>
 
 1002 1000 MMD_CAMERA_GET|ERROR              <eps>
 1002 1102 <eps>                             SYNTH_START|mei|mei_voice_normal|カメラを起動します。使用するカードをかざしてください。
@@ -464,10 +471,10 @@
 701 702 <eps>                               TEXTAREA_SET|msg_text|"いまから いう まいすう ドローしてください。"
 702 703 SYNTH_EVENT_STOP|mei                <eps>
 703 704 MMD_CAMERA_GET|draw2                SYNTH_START|mei|mei_voice_normal|2まいドローしてください
-704 502 <eps>                               TEXTAREA_SET|msg_text|"2まい ドローしてください。"
+704 709 <eps>                               TEXTAREA_SET|msg_text|"2まい ドローしてください。"
 703 705 MMD_CAMERA_GET|draw3                SYNTH_START|mei|mei_voice_normal|3まいドローしてください
-705 502 <eps>                               TEXTAREA_SET|msg_text|"3まい ドローしてください。"
-
+705 709 <eps>                               TEXTAREA_SET|msg_text|"3まい ドローしてください。"
+709 1002 SYNTH_EVENT_STOP|mei                 <eps>
 
 
 # お題待機
