@@ -365,6 +365,7 @@ class GameDebug:
             self.player = Status(100, 0)
             self.mei = Status(100, 0)
         elif END_GAME in message:
+            self.wait(3)
             try:
                 # fstでMMDAgentを終了させられるならいらない
                 os.system("taskkill /f /im MMDAgent.exe")
