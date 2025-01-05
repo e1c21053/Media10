@@ -163,6 +163,106 @@
             "bonus_type": "value",
             "fixed_challenge": "exercise",
             "path": "code\\data\\cards\\15_special_recovery.jpg"
+        },
+        {
+            "id": 16,
+            "name": "Card 16",
+            "type": "atk",
+            "value": 10,
+            "value_range": null,
+            "path": "code\\data\\cards\\8_basic_10.jpg"
+        },
+        {
+            "id": 17,
+            "name": "Card 17",
+            "type": "atk",
+            "value": 20,
+            "value_range": null,
+            "path": "code\\data\\cards\\9_basic_20.jpg"
+        },
+        {
+            "id": 18,
+            "name": "Card 18",
+            "type": "atk",
+            "value": 20,
+            "value_range": null,
+            "path": "code\\data\\cards\\9_basic_20.jpg"
+        },
+        {
+            "id": 19,
+            "name": "Card 19",
+            "type": "atk",
+            "value": 30,
+            "value_range": null,
+            "path": "code\\data\\cards\\10_basic_30.jpg"
+        },
+        {
+            "id": 20,
+            "name": "Card 20",
+            "type": "atk",
+            "value": 30,
+            "value_range": null,
+            "path": "code\\data\\cards\\10_basic_30.jpg"
+        },
+        {
+            "id": 21,
+            "name": "Card 21",
+            "type": "buff",
+            "value": 10,
+            "value_range": null,
+            "bonus_value": 30,
+            "bonus_value_range": null,
+            "bonus_type": "value",
+            "fixed_challenge": "color",
+            "path": "code\\data\\cards\\12_special_attack.jpg"
+        },
+        {
+            "id": 22,
+            "name": "Card 22",
+            "type": "buff",
+            "value": 10,
+            "value_range": null,
+            "bonus_value": 30,
+            "bonus_value_range": null,
+            "bonus_type": "value",
+            "fixed_challenge": "color",
+            "path": "code\\data\\cards\\12_special_attack.jpg"
+        },
+        {
+            "id": 23,
+            "name": "Card 23",
+            "type": "def",
+            "value": 10,
+            "value_range": null,
+            "bonus_value": 30,
+            "bonus_value_range": null,
+            "bonus_type": "value",
+            "fixed_challenge": "exercise",
+            "path": "code\\data\\cards\\13_special_defense.jpg"
+        },
+        {
+            "id": 24,
+            "name": "Card 24",
+            "type": "draw",
+            "value": 2,
+            "value_range": null,
+            "bonus_value": 3,
+            "bonus_value_range": null,
+            "bonus_type": "value",
+            "fixed_challenge": "quiz",
+            "path": "code\\data\\cards\\14_special_draw.jpg"
+        },
+        {
+            "id": 25,
+            "name": "Card 25",
+            "type": "heal",
+            "value": 20,
+            "value_range": null,
+            "bonus_value": 40,
+            "bonus_value_range": null,
+            "bonus_type": "value",
+            "fixed_challenge": "exercise",
+            "path": "code\\data\\cards\\15_special_recovery.jpg"
         }
     ]
 }
