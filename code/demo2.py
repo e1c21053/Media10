@@ -223,7 +223,7 @@ class Card:
 class GameDebug:
     def __init__(self):
         self.count = 0
-        self.difficulty = EASY
+        self.difficulty = HARD
         self._mei = Status(100, 0)
         self._player = Status(100, 0)
         self.mode = None
