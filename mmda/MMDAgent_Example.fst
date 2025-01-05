@@ -19,6 +19,7 @@
 # 0021-0030 Idle behavior
 
 2    3     <eps>                            TIMER_START|idle1|3
+#2    3     <eps>                            <eps>
 #21   22   TIMER_EVENT_START|idle1           TIMER_START|idle2|10
 #22   23   TIMER_EVENT_START|idle2           TIMER_START|idle3|20
 #23   24   TIMER_EVENT_START|idle3           TIMER_START|idle4|25
@@ -34,8 +35,10 @@
 # メイはプレイヤーに対して「難易度を選択してください」と発話し、ユーザからの応答を待つ。
 3   440   TIMER_EVENT_STOP|idle1            MOTION_ADD|mei|greeting|Motion\mei_greeting\mei_greeting.vmd|PART|ONCE
 # デバッグ用のチュートリアルスキップ
+
 #440 6000   <eps>                             <eps>
-440 8999   <eps>                             <eps>
+#440 8999   <eps>                             <eps>
+
 440 441   <eps>                             TEXTAREA_SET|msg_textbox|Accessory\img\sentence_txtbox.png
 441 442   <eps>                             SYNTH_START|mei|mei_voice_normal|はじめまして。私の名前はメイです。みてのとおり、アンドロイドです。
 442 443   <eps>                             TEXTAREA_SET|msg_text|"はじめまして。私の名前はメイです。\nみてのとおり、アンドロイドです。"
@@ -161,7 +164,7 @@
 
 9103 9104 RECOG_EVENT_STOP|ない             <eps>
 9103 9104 RECOG_EVENT_STOP|いいえ           <eps>
-9103 9104 RECOG_EVENT_STOP|いえ           <eps>
+9103 9104 RECOG_EVENT_STOP|いえ             <eps>
 9103 9104 RECOG_EVENT_STOP|大丈夫           <eps>
 9103 9104 RECOG_EVENT_STOP|あり,ませ,ん     <eps>
 9103 9104 MMD_CAMERA_GET|いいえ             <eps>
@@ -182,9 +185,10 @@
 9305 9306 <eps>                             TEXTAREA_SET|msg_text|"思い出した。\nおまえが わたしを あやつっていたのか。"
 9306 9307 SYNTH_EVENT_STOP|mei              SYNTH_START|mei|mei_voice_normal|よくも、かぞくを、ここでかたきをとる。
 9307 9308 <eps>                             TEXTAREA_SET|msg_text|"よくも かぞくを\nここで かたきをとる。"
-9308 9309 SYNTH_EVENT_STOP|mei              SYNTH_START|mei|mei_voice_angry|しょうぶだ。
-9309 9310 <eps>                             TEXTAREA_SET|msg_text|"しょうぶだ。"
-9310 225  <eps>                             VALUE_SET|end_flag|3
+9308 9309 <eps>                             MOTION_ADD|mei|expression|Expression\mei_anger\mei_anger.vmd|PART|ONCE
+9309 9310 SYNTH_EVENT_STOP|mei              SYNTH_START|mei|mei_voice_angry|しょうぶだ。
+9310 9311 <eps>                             TEXTAREA_SET|msg_text|"しょうぶだ。"
+9311 225  <eps>                             VALUE_SET|end_flag|3
 
 #難易度選択
 8810 8999 SYNTH_EVENT_STOP|mei              <eps>
@@ -328,14 +332,18 @@
 7002 7010 MMD_CAMERA_GET|勝ち                   <eps>
 7010 7011 <eps>                                 VALUE_EVAL|end_flag|EQ|1
 7011 4000 VALUE_EVENT_EVAL|end_flag|EQ|1|TRUE   <eps>                       #エンド1
-7011 7012 VALUE_EVENT_EVAL|end_flag|EQ|1|FALSE  VALUE_EVAL|end_flag|EQ|2
+7011 7100 VALUE_EVENT_EVAL|end_flag|EQ|1|FALSE  TEXTAREA_SET|msg_textbox|Accessory\img\clean.png
+7100 7101 <eps>                                 TEXTAREA_SET|msg_text|Accessory\img\clean.png
+7101 7012 <eps>                                 VALUE_EVAL|end_flag|EQ|2
 7012 5100 VALUE_EVENT_EVAL|end_flag|EQ|2|TRUE   <eps>                       #エンド2
 7012 6100 VALUE_EVENT_EVAL|end_flag|EQ|2|FALSE  <eps>                       #エンド3
 # mei>player
 7002 7020 MMD_CAMERA_GET|負け                   <eps>
 7020 7021 <eps>                                 VALUE_EVAL|end_flag|EQ|1
 7021 3000 VALUE_EVENT_EVAL|end_flag|EQ|1|TRUE   <eps>                       #エンド1
-7021 7022 VALUE_EVENT_EVAL|end_flag|EQ|1|FALSE  VALUE_EVAL|end_flag|EQ|2
+7021 7200 VALUE_EVENT_EVAL|end_flag|EQ|1|FALSE  TEXTAREA_SET|msg_textbox|Accessory\img\clean.png
+7200 7221 <eps>                                 TEXTAREA_SET|msg_text|Accessory\img\clean.png
+7221 7022 <eps>                                 VALUE_EVAL|end_flag|EQ|2
 7022 5000 VALUE_EVENT_EVAL|end_flag|EQ|2|TRUE   <eps>                       #エンド2
 7022 6000 VALUE_EVENT_EVAL|end_flag|EQ|2|FALSE  <eps>                       #エンド3
 
@@ -364,15 +372,15 @@
 
 # エンド2
 # mei Win
-5000 5001 <eps>                             SYNTH_START|mei|mei_voice_sad|また、つみのない人を…。
-5001 5002 <eps>                             TEXTAREA_SET|msg_text|"また、つみのない人を・・・"
+5000 5002 <eps>                             SYNTH_START|mei|mei_voice_sad|また、つみのない人を…。
+#5001 5002 <eps>                             TEXTAREA_SET|msg_text|"また、つみのない人を・・・"
 5002 5003 <eps>                             MOTION_ADD|mei|expression|Expression\mei_sadness\mei_sadness.vmd|PART|ONCE
 5003 5004 <eps>                             MOTION_ADD|mei|action|Motion\mei_adv\go_down.vmd|PART|ONCE
 5004 7700 SYNTH_EVENT_STOP|mei              <eps>
 
 # mei Lose
-5100 5101 <eps>                             SYNTH_START|mei|mei_voice_bashful|これでわたしは自由になれます…
-5101 5102 <eps>                             TEXTAREA_SET|msg_text|"これで わたしは 自由に なれます・・・\nありがとう。"
+5100 5102 <eps>                             SYNTH_START|mei|mei_voice_bashful|これでわたしは自由になれます…
+#5101 5102 <eps>                             TEXTAREA_SET|msg_text|"これで わたしは 自由に なれます・・・\nありがとう。"
 5102 5110 <eps>                             MOTION_ADD|mei|action|Motion\mei_self_introduction\mei_self_introduction.vmd|PART|ONCE
 5110 5103 <eps>                             MOTION_ADD|mei|expression|Expression\mei_bashfulness\mei_bashfulness.vmd|PART|ONCE
 5103 5104 SYNTH_EVENT_STOP|mei              TIMER_START|wait|1.0
@@ -382,26 +390,28 @@
 
 # エンド3
 # mei Win
-6000 6001 <eps>                             SYNTH_START|mei|mei_voice_angry|やっと。やっとだ！
-6001 6010 <eps>                             TEXTAREA_SET|msg_text|"やっと。やっとだ！！"
+6000 6010 <eps>                             SYNTH_START|mei|mei_voice_angry|やっと。やっとだ！
+#6001 6010 <eps>                             TEXTAREA_SET|msg_text|"やっと。やっとだ！！"
 6010 6002 <eps>                             MOTION_ADD|mei|action|Motion\mei_guts\mei_guts.vmd|PART|ONCE
 6002 6003 SYNTH_EVENT_STOP|mei              TIMER_START|wait|1.0
-6003 6004 TIMER_EVENT_STOP|wait             SYNTH_START|mei|mei_voice_angry|やっとかぞくのかたきがとれた。
-6004 6005 <eps>                             TEXTAREA_SET|msg_text|"やっと かぞくの かたきが とれた。"
+6003 6005 TIMER_EVENT_STOP|wait             SYNTH_START|mei|mei_voice_angry|やっとかぞくのかたきがとれた。
+#6004 6005 <eps>                             TEXTAREA_SET|msg_text|"やっと かぞくの かたきが とれた。"
 6005 6006 <eps>                             MOTION_ADD|mei|imagine|Motion\mei_imagine\mei_imagine_forward_normal.vmd|PART|ONCE
 6006 6007 <eps>                             MOTION_ADD|mei|expression|Expression\mei_sadness\mei_sadness.vmd|PART|ONCE
 6007 7700 SYNTH_EVENT_STOP|mei              <eps>
 
 # mei Lose
-6100 6101 <eps>                             SYNTH_START|mei|mei_voice_sad|いやだ、またあんな。
-6101 6110 <eps>                             TEXTAREA_SET|msg_text|"いやだ、またあんな。"
-6110 6102 <eps>                             MOTION_ADD|mei|go_down|Motion\mei_adv\go_down.vmd|PART|ONCE
-6102 6103 SYNTH_EVENT_STOP|mei              TIMER_START|wait|3.0
-6103 6104 <eps>                             TEXTAREA_SET|msg_text|"・・・"
-6104 6105 TIMER_EVENT_STOP|wait             SYNTH_START|mei|mei_voice_normal|おめでとうございます。
-6105 6106 <eps>                             TEXTAREA_SET|msg_text|"おめでとうございます。"
+6100 6110 <eps>                             SYNTH_START|mei|mei_voice_sad|いやだ、また、あんな。
+#6101 6110 <eps>                             TEXTAREA_SET|msg_text|"いやだ、またあんな。"
+6110 6111 <eps>                             MOTION_ADD|mei|go_down|Motion\mei_adv\go_down_up.vmd|PART|ONCE
+6111 6102 <eps>                             MOTION_ADD|mei|expression|Expression\mei_sadness\mei_sadness.vmd|PART|ONCE
+6102 6104 SYNTH_EVENT_STOP|mei              TIMER_START|wait|5.0
+#6103 6104 <eps>                             TEXTAREA_SET|msg_text|"・・・"
+6104 6106 TIMER_EVENT_STOP|wait             SYNTH_START|mei|mei_voice_normal|おめでとうございます。
+#6105 6106 <eps>                             TEXTAREA_SET|msg_text|"おめでとうございます。"
 6106 6107 <eps>                             MOTION_ADD|mei|greeting|Motion\mei_greeting\mei_greeting.vmd|PART|ONCE
-6107 7700 SYNTH_EVENT_STOP|mei              <eps>       
+6107 6108 <eps>                             MOTION_ADD|mei|expression|Expression\mei_sadness\mei_sadness.vmd|PART|ONCE
+6108 7700 SYNTH_EVENT_STOP|mei              <eps>       
 
 # 終わり（仮）
 7700 7701 <eps>                             TIMER_START|wait|2.0
