@@ -450,18 +450,18 @@ class GameDebug:
         print("select card")
         self.wait(3)
         dict, parameters = self.get_aruco_dict_and_params()
-        if True:  # debug, pick card randomly
-            while True:
-                self.active_card = self.cards[13] #クイズカード
-                if not self.active_card.used:
-                    print(f"selected card: {self.active_card.name}")
-                    print(f"path: {self.active_card.path}")
-                    break
-                self.active_card = np.random.choice(self.cards)
-                if not self.active_card.used:
-                    print(f"selected card: {self.active_card.name}")
-                    print(f"path: {self.active_card.path}")
-                    break
+        # if True:  # debug, pick card randomly
+        #     while True:
+        #         self.active_card = self.cards[13] #クイズカード
+        #         if not self.active_card.used:
+        #             print(f"selected card: {self.active_card.name}")
+        #             print(f"path: {self.active_card.path}")
+        #             break
+        #         self.active_card = np.random.choice(self.cards)
+        #         if not self.active_card.used:
+        #             print(f"selected card: {self.active_card.name}")
+        #             print(f"path: {self.active_card.path}")
+        #             break
         # 本来はこっち
         while not self.active_card:
             ret, frame = self.cap.read()
