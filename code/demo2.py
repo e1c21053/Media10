@@ -603,6 +603,8 @@ class GameDebug:
             MMD().send_message(CONTINUE.encode())
         self.mode = None
         self.player.is_invincible = False
+        self.player.gp = 0
+        self.player.ap = 0
 
     def mei_turn(self):
         def get_random_dmg(dmg_list: list[tuple[int, float]]) -> int:
@@ -613,7 +615,7 @@ class GameDebug:
             return np.random.choice([dmg[0] for dmg in dmg_list], p=[dmg[1] for dmg in dmg_list])
         self.wait(1)
         dmg = get_random_dmg(mei_damage_table[self.difficulty])
-        self.player.hp -= dmg + self.player.gp
+        self.player.hp -= dmg - self.player.gp
         self.show_player_status()
         print(f"メイの攻撃: {dmg}のダメージ")
 
